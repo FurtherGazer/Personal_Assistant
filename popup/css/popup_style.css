@@ -1,0 +1,48 @@
+body {
+    font-family: 'Microsoft Yahei';
+    margin: 0px;
+    padding: 0px;
+}
+p {
+    margin: 0px;
+    padding: 5px 10px;
+    font-size: 100%;
+}
+.mainContent {
+    width: 450px;
+    min-height: 600px;
+    background-color: white;
+}
+.header {
+    width: 100%;
+    height: 50px;
+    border-bottom-style: solid;
+    border-bottom-color: #f1f1f1;
+    border-bottom-width: 1px;
+    background-color: #fafafa;
+}
+.header-logo {
+    width: 80%;
+    height: 100%;
+    /* background-color: black; */
+    display: inline-block;
+    vertical-align: top;
+}
+.logo-font {
+    padding: 0px;
+    padding-left: 15px;
+    font-size: 120%;
+    /* text-align: center; */
+    line-height:50px;
+    color: #737373;
+}
+.top-header-tool {
+    width: 15%;
+    height: 100%;
+    display: inline-block;
+    /* background-color: black; */
+    vertical-align: top;
+}
+.icon-tool {
+    
+}

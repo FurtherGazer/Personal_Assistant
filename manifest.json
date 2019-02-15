@@ -1,0 +1,29 @@
+{
+    "manifest_version": 2,
+    "name": "[Beta]Personal Assistant V1.0",
+    "version": "1.00",
+    "description": "个人助理插件",
+    "background": {
+      "scripts": [ "background/background.js" ]
+    },
+    "browser_action": {
+      "default_icon": {
+        "16": "img/icon-off-16.png",
+        "32": "img/icon-off-32.png"
+     },
+      "default_title": "个人助理插件",
+      "default_popup": "popup/popup.html"
+    },
+    "icons": {
+      "128": "img/icon-128.png",
+      "16": "img/icon-16.png",
+      "48": "img/icon-48.png"
+   },
+    "content_scripts": [
+      {
+        "matches": ["http://*/*", "https://*/*"],
+        "js": ["content/content.js"]
+      }
+    ],
+    "permissions": []
+}
