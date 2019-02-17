@@ -4,24 +4,81 @@
 	<title>popup页</title>
 	<meta charset="utf-8"/>
 	<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+	
+	<!-- JS -->
 	<script src="js/jquery.1.12.3.min.js"></script>
-	<script src="js/popup_common.js"></script>
-	<link href="css/popup_style.css" rel="stylesheet" type="text/css" />
+	<script src="js/vue.js"></script>
+	<script src="js/popup_vue_component.js"></script>
+	<!-- <script src="js/bootstrap.min.js"></script> -->
+	
+	<!-- CSS -->
 	<link href="font-awesome-4.7.0/css/font-awesome.min.css" rel="stylesheet" type="text/css" />
+	<!-- <link href="css/bootstrap.min.css" rel="stylesheet" type="text/css" /> -->
+	<link href="css/popup_style.css" rel="stylesheet" type="text/css" />
+
+
 </head>
 <body>
-	<div class='mainContent'>
-		<div class='header top-header'>
-			<div class='header-logo'>
-				<p class='logo-font'><strong>Personal</strong> Assistant</p>
+	<div id='mainContent'>
+		<!-- HEADER-TOP -->
+		<div id='header-top' class='header-box flex-box'>
+			<div id='header-top-logo'>
+				<p class='headline-font' style='font-size:120%;color: #f1f1f1;'><strong>Personal</strong> Assistant</p>
 			</div>
-			<div class='top-header-tool'>
-				<i class="fa fa-home fa-2x icon-tool"></i>
+			<div id='header-top-tool' class=' flex-box'>
+				<i class="fa fa-cog icon-tool"></i>
 			</div>
 		</div>
-		<div class='header header-about'>
 
+		<!-- LIST -->
+		<div id='content-toToList'>
+			<!-- HEADER-ABOUT -->
+			<div id='header-about' class='header-box flex-box'>
+				<div id='header-about-left' style="width: 85%;">
+					<p class='headline-font' style="color: #1e1e1e"><strong>ToDo</strong> list</p>
+				</div>
+				<div id='header-about-right' class='header-about-right flex-box' style="width: 15%;">
+					<p style="font-size:1.2em;"><strong>{{ inTotals }}</strong></p>
+					<p style="font-size:0.8em;">in totals</p>
+				</div>
+			</div>
+			<!-- SEARCH CONTENT -->
+			<div id='search-container' class='flex-box'>
+				<input class='search-input' placeholder='Input keywords for search...'>
+				<i class="fa fa-search icon-search"></i>
+			</div>
+			<!-- TODO LIST CONTNT -->
+			<div id='todoList-container' class='todoList-container flex-box'>
+				<!-- Vue 实例 -->
+				<!-- :key 是 v-bind: 的缩写 -->
+				<!-- index 在这里是一个可选参数 -->
+				<todoli
+					v-for="(index,todoli) in todoList"
+					:key="index"
+					:todoli="todoli"
+				></todoli>
+			</div>
+		</div>
+
+		<!-- EDIT -->
+		<div id='content-editToDoItem'>
+			
+		</div>
+
+
+		<!-- footer -->
+		<div id='footer' class=' flex-box'>
+			<div class='add-more'>
+				<p style="font-size:1em;color:#6e6e6e"><i class="fa fa-plus icon-plus"></i>{{ text }}</p>
+			</div>
 		</div>
 	</div>
 </body>
+
+	<!-- JS -->
+	<script src="js/popup_vue.js"></script>
+	<script src="js/popup_common.js"></script>
+
+
+
 </html>

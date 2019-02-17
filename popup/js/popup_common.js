@@ -14,18 +14,18 @@ function sendMessageToContentScript(message, callback)
 	});
 };
 
-function updateBrowserAction(ifStart) {
-    chrome.browserAction.setTitle({
-        title: ifStart ? '测试用纯净谷歌拓展: ON' : '测试用纯净谷歌拓展: OFF'
-    });
-    chrome.browserAction.setIcon({
-        path: ifStart ? {'16': 'img/icon-on-16.png', '32': 'img/icon-on-32.png'} :
-                    {'16': 'img/icon-off-16.png', '32': 'img/icon-off-32.png'}
-    });
-    chrome.browserAction.setBadgeText({
-        text: ifStart ? 'ON' : ''
-    });
-};
+// function updateBrowserAction(ifStart) {
+//     chrome.browserAction.setTitle({
+//         title: ifStart ? '测试用纯净谷歌拓展: ON' : '测试用纯净谷歌拓展: OFF'
+//     });
+//     chrome.browserAction.setIcon({
+//         path: ifStart ? {'16': 'img/icon-on-16.png', '32': 'img/icon-on-32.png'} :
+//                     {'16': 'img/icon-off-16.png', '32': 'img/icon-off-32.png'}
+//     });
+//     chrome.browserAction.setBadgeText({
+//         text: ifStart ? 'ON' : ''
+//     });
+// };
 
 // 初始化状态
 // 初始化状态会导致每次点击的时候都默认为 false，这是不合理的
@@ -34,17 +34,18 @@ function updateBrowserAction(ifStart) {
 
 $(document).ready(function(){
     // 点击开始测试
-    $('#start_test p').on('click',function(){
-        updateBrowserAction(true);
-        sendMessageToContentScript({key:'controllerStart'});
+    // $('#start_test p').on('click',function(){
+    //     updateBrowserAction(true);
+    //     sendMessageToContentScript({key:'controllerStart'});
+    // });
+    
+    // 两个主要内容区
+    var contentToDoList = $('#content-toToList');
+    var contentEditToDoItem = $('#content-editToDoItem');
+
+    $('.add-more').on('click', function(){
+        // contentToDoList.hide();
+        // contentEditToDoItem.show();
     });
-    // 点击结束测试
-    $('#finish_test p').on('click',function(){
-        updateBrowserAction(false);
-        sendMessageToContentScript({key:'controllerStop'});
-    });
-    // 编辑测试设置1
-    $('#editPassWord p').on('click',function(){
-        sendMessageToContentScript({key:'controllerEditPassWord'});
-    });
+
 })
