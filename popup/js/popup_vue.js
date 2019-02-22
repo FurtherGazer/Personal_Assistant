@@ -1,5 +1,4 @@
 // 这个文件是实例化的 Vue 对象
-
 // todoListInTotals
 var todoListInTotals = new Vue({
     el:'#header-about-right',

@@ -32,6 +32,10 @@ function sendMessageToContentScript(message, callback)
 // popup的生命周期，仅保持在展开和缩回的一短暂时间内，其状态是固定的
 // updateBrowserAction(false);
 
+// footer 组件实例
+
+
+
 $(document).ready(function(){
     // 点击开始测试
     // $('#start_test p').on('click',function(){
@@ -44,8 +48,11 @@ $(document).ready(function(){
     var contentEditToDoItem = $('#content-editToDoItem');
 
     $('.add-more').on('click', function(){
-        // contentToDoList.hide();
-        // contentEditToDoItem.show();
+        // 此处应该修改为这个控件的两种状态，状态一是添加
+        // 状态二是保存，而且应该是可扩展的
+        // 可以试试使用面向对象的方法，每种一个状态，状态上加参数
+        contentToDoList.toggle();
+        contentEditToDoItem.toggle();
     });
 
 })

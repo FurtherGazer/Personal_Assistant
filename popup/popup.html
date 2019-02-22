@@ -1,20 +1,21 @@
 <!DOCTYPE html>
-<html>
+<html ng-app="app" lang="en">
 <head>
 	<title>popup页</title>
 	<meta charset="utf-8"/>
 	<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 	
-	<!-- JS -->
-	<script src="js/jquery.1.12.3.min.js"></script>
-	<script src="js/vue.js"></script>
-	<script src="js/popup_vue_component.js"></script>
-	<!-- <script src="js/bootstrap.min.js"></script> -->
-	
 	<!-- CSS -->
 	<link href="font-awesome-4.7.0/css/font-awesome.min.css" rel="stylesheet" type="text/css" />
-	<!-- <link href="css/bootstrap.min.css" rel="stylesheet" type="text/css" /> -->
 	<link href="css/popup_style.css" rel="stylesheet" type="text/css" />
+
+
+
+	<!-- JS -->
+	<script src="js/jquery.1.12.3.min.js"></script>
+	<script src="js/vue.min.js"></script>
+	<script src="js/popup_vue_component.js"></script>
+
 
 
 </head>
@@ -58,20 +59,24 @@
 					:todoli="todoli"
 				></todoli>
 			</div>
+
 		</div>
 
 		<!-- EDIT -->
-		<div id='content-editToDoItem'>
-			
+		<div id='content-editToDoItem' style="display:none;">
+			<datetime v-model="date"></datetime>
 		</div>
 
 
+
 		<!-- footer -->
-		<div id='footer' class=' flex-box'>
+		<div id='footer' class='flex-box'>
 			<div class='add-more'>
 				<p style="font-size:1em;color:#6e6e6e"><i class="fa fa-plus icon-plus"></i>{{ text }}</p>
 			</div>
 		</div>
+
+
 	</div>
 </body>
 
