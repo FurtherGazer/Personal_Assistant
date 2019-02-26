@@ -8,15 +8,14 @@
 	<!-- CSS -->
 	<link href="font-awesome-4.7.0/css/font-awesome.min.css" rel="stylesheet" type="text/css" />
 	<link href="css/popup_style.css" rel="stylesheet" type="text/css" />
-
-
+	<link href="air-datepicker/css/datepicker.min.css" rel="stylesheet" type="text/css">
 
 	<!-- JS -->
 	<script src="js/jquery.1.12.3.min.js"></script>
 	<script src="js/vue.min.js"></script>
 	<script src="js/popup_vue_component.js"></script>
-
-
+	<script src="air-datepicker/js/datepicker.min.js"></script>
+	<script src="air-datepicker/js/i18n/datepicker.en.js"></script>
 
 </head>
 <body>
@@ -64,7 +63,7 @@
 
 		<!-- EDIT -->
 		<div id='content-editToDoItem' style="display:none;">
-			<datetime v-model="date"></datetime>
+			<input type='text' id='timepicker-actions-exmpl' />
 		</div>
 
 
