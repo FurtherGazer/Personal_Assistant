@@ -97,7 +97,7 @@ p {
 .todoList-container {
     height: 425px;
     /* background-color: #1e1e1e; */
-    border-bottom: 1px solid #f1f1f1;
+    /* border-bottom: 1px solid #f1f1f1; */
     overflow-y:auto; overflow-x:auto;
     flex-direction: column;
 }
@@ -140,6 +140,7 @@ p {
     position: absolute;
     top:565px;
     width: 100%;
+    border-top: 1px solid #f1f1f1;
 }
 #footer:hover {
     background-color:#f1f1f1;

@@ -1,11 +1,3 @@
-import Vue from 'vue'
-import Datetime from 'vue-datetime'
-// You need a specific loader for CSS files
-import 'vue-datetime/dist/vue-datetime.css'
-
-Vue.use(Datetime)
-
-
 // 这个 js 文件用来构建组件
 
 // todoli 组件
