@@ -4,19 +4,20 @@
 Vue.component('todoli', {
     props: ['todoli'],
     template:  `<div class='todoList-li flex-box'>
+                    <div class='todoList-li-Left flex-box'>
+                        <p class='todoList-CountDown'><b></b></p>
+                        <i class='todoList-CountDown'>hours</i>
+                    </div>
                     <div class='todoList-li-content flex-box'>
                         <div class='todoList-li-content-text'>
-                            <p class='todoList-li-content-p'>{{ todoli.Text }}</p>
+                            <p class='todoList-li-content-p'>{{ todoli.Text.substring(0,45) }}...</p>
                         </div>
-                        <div class='todoList-li-content-time flex-box'>
+                        <div class='todoList-li-content-property'>
                             <div>
-                                <p class='todoList-li-content-time-p'>Started: {{ todoli.Started }}</p>
+                                <p class='todoList-li-content-property-p'>TimeRange: <i class='todoList-li-content-property-timerange'>{{ todoli.Started }} - {{ todoli.Deadline }}</i></p>
                             </div>
                             <div>
-                                <p class='todoList-li-content-time-p'>Deadline: {{ todoli.Deadline }}</p>
-                            </div>
-                            <div>
-                                <p class='todoList-li-content-time-p'>Priority: {{ todoli.Priority }}</p>
+                                <p class='todoList-li-content-property-p'>Priority: {{ todoli.Priority }}</p>
                             </div>
                         </div>
                     </div>

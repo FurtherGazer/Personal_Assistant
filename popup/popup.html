@@ -12,6 +12,7 @@
 
 	<!-- JS -->
 	<script src="js/jquery.1.12.3.min.js"></script>
+	<script src="layer_mobile/layer.js"></script>
 	<script src="js/vue.min.js"></script>
 	<script src="js/popup_vue_component.js"></script>
 	<script src="air-datepicker/js/datepicker.min.js"></script>
@@ -27,6 +28,19 @@
 			</div>
 			<div id='header-top-tool' class=' flex-box'>
 				<i class="fa fa-cog icon-tool"></i>
+			</div>
+		</div>
+		<!-- HEADER OPERATION -->
+		<div id='header-operation'>
+			<!-- 通过套一个壳，以避免对下面布局的影响 -->
+			<div class='header-box flex-box' style="height:35px;">
+				<!-- 各大功能 -->
+				<div id='header-operation-about' class='btn'>
+					<p class='btn-p'><i class="fa fa-question-circle-o icon-plus"></i>About</p>
+				</div>
+				<div id='header-operation-delAll' class='btn'>
+					<p class='btn-p'><i class="fa fa-trash-o icon-plus"></i>Del-all</p>
+				</div>
 			</div>
 		</div>
 
@@ -57,32 +71,71 @@
 					:key="index"
 					:todoli="todoli"
 				></todoli>
-			</div>
 
+				<!-- 测试区 -->
+				<!-- <div class='todoList-li flex-box'>
+					<div class='todoList-li-Left flex-box'>
+						<p class='todoList-CountDown'><b>-6h</b></p>
+					</div>
+					<div class='todoList-li-content flex-box'>
+						<div class='todoList-li-content-text'>
+							<p class='todoList-li-content-p'>test...</p>
+						</div>
+						<div class='todoList-li-content-property'>
+							<div>
+								<p class='todoList-li-content-property-p'>TimeRange: 01/29/2019 09:30 am - 01/29/2019 09:30 am</p>
+							</div>
+							<div>
+								<p class='todoList-li-content-property-p'>Priority: high</p>
+							</div>
+						</div>
+					</div>
+					<div class='todoList-li-operation flex-box'>
+						<i class="fa fa-cogs icon-operation"></i>
+					</div>
+				</div> -->
+
+			</div>
 		</div>
 
 		<!-- EDIT -->
-		<div id='content-editToDoItem' style="display:none;">
-			<div>
-				<textarea></textarea>
+		<div id='content-editToDoItem' class='flex-box' style="display:none;">
+			<div class='center-content'>
 				<div>
-					<span>开始时间:</span>
+					<p>Started:</p>
 					<input type='text' id='timepicker-Started' />
 				</div>
 				<div>
-					<span>结束时间:</span>
+					<p>Deadline:</p>
 					<input type='text' id='timepicker-Deadline' />
 				</div>
+				<div>
+					<p>ToDo:</p>
+					<textarea id='todoTextarea'></textarea>
+				</div>
+				<div>
+					<p>Priority:</p>
+					<select id="selectPriority">
+						<option>low</option><option>medium</option><option>high</option>
+					</select>
+				</div>
 			</div>
-			
 		</div>
 
 
 
 		<!-- footer -->
 		<div id='footer' class='flex-box'>
-			<div class='add-more'>
-				<p style="font-size:1em;color:#6e6e6e"><i class="fa fa-plus icon-plus"></i>{{ text }}</p>
+			<div id='addMore' class='btn'>
+				<p class='btn-p'><i class="fa fa-plus icon-plus"></i>creat a new todo...</p>
+			</div>
+			<div id='saveOrCancel' style="display:none" class='flex-box'>
+				<div id='save' class='btn saveOrCancel_btn'>
+					<p class='btn-p'><i class="fa fa-check icon-plus"></i>save</p>
+				</div>
+				<div id='cancel' class='btn saveOrCancel_btn'>
+					<p class='btn-p'><i class="fa fa-close icon-plus"></i>cancel</p>
+				</div>
 			</div>
 		</div>
 

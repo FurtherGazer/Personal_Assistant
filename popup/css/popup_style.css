@@ -35,6 +35,13 @@ p {
     /* display: inline-block; */
     vertical-align: top;
 }
+#header-operation {
+    font-size: 80%;
+    display: none;
+}
+#header-operation-about,#header-operation-delAll {
+    width: 50%;
+}
 .headline-font {
     padding: 0px;
     padding-left: 15px;
@@ -103,35 +110,48 @@ p {
 }
 .todoList-li {
     /* margin-top: 10px; */
-    min-height: 45px;
+    min-height: 35px;
     border-bottom: 1px solid #f1f1f1;
-    padding: 5px 15px;
+    padding: 5px 0px;
 }
 .todoList-li:hover {
     background-color: #f1f1f1;
+}
+.todoList-li-Left {
+    width: 10%;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column ;
 }
 .todoList-li-content {
     flex-direction: column;
     /* padding: 0px 15px; */
     word-wrap:break-word;
-    width: 85%;
+    width: 80%;
 }
 .todoList-li-content-text {
     word-wrap:break-word;
+    padding: 5px 0px;
 }
-.todoList-li-content-time {
+.todoList-li-content-p {
+    padding-left: 10px;
+}
+.todoList-li-content-property {
     margin-top: 3px;
+    display: none;
+    border-top: 1px solid #f1f1f1;
+    padding: 5px 0px;
 }
-.todoList-li-content-time-p {
+.todoList-li-content-property-p {
     font-size: 0.6em;
     padding-right: 15px;
     color: #369bff;
     /* border-left: 1px solid #f1f1f1; */
 }
 .todoList-li-operation {
-    width: 15%;
+    width: 10%;
     /* background-color: #1e1e1e */
-    justify-content: flex-end;
+    justify-content: center;
     align-items: center;
 }
 #footer {
@@ -142,7 +162,10 @@ p {
     width: 100%;
     border-top: 1px solid #f1f1f1;
 }
-#footer:hover {
+#addMore {
+    width: 100%;
+}
+.btn:hover {
     background-color:#f1f1f1;
 }
 /* .bt {
@@ -160,10 +183,47 @@ p {
 }
 .icon-operation {
     /* text-align: left; */
-    line-height: 45px;
+    line-height: 100%;
     font-size: 1.2em;
     color:#bfbfbf;
 }
 .icon-operation:hover {
     color:#1d1d1d;
+}
+#content-editToDoItem {
+    padding: 15px;
+    flex-direction: row;
+}
+.center-content {
+    width:70%;
+    padding: 0 15%;
+    justify-content:center;
+}
+#todoTextarea {
+    width: 100%;
+    height: 250px;
+}
+.tips {
+    display: none;
+    font-size: 100%;
+    color: red;
+    padding: 0 0 0 15px;
+}
+#saveOrCancel {
+    width: 100%;
+}
+.saveOrCancel_btn {
+    width: 50%;
+}
+#save {
+    border-right: 1px solid #f1f1f1;
+}
+.btn-p {
+    font-size:1em;
+    color:#6e6e6e;
+    text-align: center;
+}
+.todoList-CountDown {
+    word-break:break-all;
+    font-size: 80%;
 }
