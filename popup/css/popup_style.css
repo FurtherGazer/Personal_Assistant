@@ -117,8 +117,12 @@ p {
 .todoList-li:hover {
     background-color: #f1f1f1;
 }
+.todoList-li-label {
+    width: 1%;
+    /* background-color: #1e1e1e; */
+}
 .todoList-li-Left {
-    width: 10%;
+    width: 9%;
     justify-content: center;
     align-items: center;
     flex-direction: column ;
@@ -188,7 +192,7 @@ p {
     color:#bfbfbf;
 }
 .icon-operation:hover {
-    color:#1d1d1d;
+    color:#1e9f75;
 }
 #content-editToDoItem {
     padding: 15px;
@@ -226,4 +230,11 @@ p {
 .todoList-CountDown {
     word-break:break-all;
     font-size: 80%;
+}
+.fade-enter-active, .fade-leave-active {
+    transition: opacity .5s;
+}
+.fade-enter, .fade-leave-to /* .fade-leave-active below version 2.1.8 */ {
+    opacity: 0;
+    background-color: aliceblue
 }

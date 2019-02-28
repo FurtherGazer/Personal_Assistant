@@ -15,7 +15,7 @@ function initialization(thisStorageData){
         // {Text:'test2', Started:'2019/2/16', Deadline:'2019/3/1', Priority:'high'}, 形式
         // 而应是 test2<*>2019/2/16<*>2019/3/1<*>high;...这种形式
         var todoListData = new Array();
-        var storageDataArray = thisStorageData.split(';');
+        var storageDataArray = thisStorageData.split('</;>');
         for(let i=0;i<storageDataArray.length; i++){
             var todoItemData = {};
             var storageDataItem = storageDataArray[i].split('<*>');
@@ -41,11 +41,17 @@ var todoListContainer = new Vue({
     el:'#todoList-container',
     data: {
         todoList: initializationData,
+        // show: true, 这块可能不行，因为每个组件的 true ，false 应该是独立的，在这块直接设定，则变成父组件共有的了
+    },
+    components: {
+        'todoli':todoItem,
     }
 });
 
 // 这个文件是实例化的 Vue 对象
 // todoListInTotals
+// 了解了，因为 js 当中，数据赋值，赋值的是整个数组的话，是对数组的引用
+// 所以initializationData的变更，会显示，而这块引用的是一个数据，则数据的引用不会同步
 var initializationDataLength = initializationData.length;
 var todoListInTotals = new Vue({
     el:'#header-about-right',
@@ -54,14 +60,3 @@ var todoListInTotals = new Vue({
     }
 });
 
-// ToDoItem 倒计时渲染
-function countDown(){
-    $('.todoList-li').each(
-        function(){
-            let _timeRange = $(this).find('i.todoList-li-content-property-timerange').text();
-            let _Deadline = new Date(timeRange.split('-')[1]);
-            let _countDown = _Deadline - new Date();
-            console.log(_countDown)
-        }
-    )
-}

@@ -55,7 +55,7 @@ $(document).ready(function(){
     $('#header-operation-delAll').on('click', function(){
         //询问框
         layer.open({
-            content: '您是否确定清空所有 todoList 内容？',
+            content: '您是否确定清空 todoList？',
             btn: ['确定', '返回'],
             yes: function(index){
                 localStorage.clear();
@@ -63,7 +63,7 @@ $(document).ready(function(){
                 todoListContainer.todoList = [];
                 todoListInTotals.inTotals = 0;
                 // 插入一个提示框
-                msg('所有 toDOList 已清空，你可以在回收车中找到清空内容')
+                msg('todoList 已清空，你可以在回收车中找到清空内容')
             }
         });
     });
@@ -74,11 +74,24 @@ $(document).ready(function(){
     });
 
     // 点击 icon-operation 时展开 todo 属性
-    // 重新渲染时，在绑定一下
-    todoItemOperation(true);
+    // 尝试替换为 vue 模块
+    // todoItemOperation(true);
 
-    // 倒计时渲染
-    countDown()
+    // todoliRemove 控制删除（vue 列表 & 数据库）
+    $('div.todoList-li-operation i.icon-operation').on('click',function(){
+        let _index = $(this).parents('.todoList-li').attr('key');
+        // 数据刷新
+        initializationData.splice(_index,1);
+        // 数据存储
+        let storageData = localStorage.getItem('myToDo');
+        // 这块产生的原因时，splice 会抛出删除的内容，哦 storageData.split('</;>') 返回一个新数组
+        let newStorageData = storageData.split('</;>');
+        newStorageData.splice(_index,1);
+        newStorageData = newStorageData.join('</;>')
+        // console.log(_index, storageData);
+        localStorage.setItem('myToDo', newStorageData);
+        todoListInTotals.inTotals--;
+    });
 
     // 所有展开元素绑定一个自动缩回的行为
     // 感觉逻辑有些不慎合理，最好还是修改成，当点击这个元素时，其他元素都缩回
@@ -89,14 +102,6 @@ $(document).ready(function(){
             _this.hide();
         },500)
     });
-    // 这种方案可行，但是得配置关联，下面 allHide 是隐藏区域，但是隐藏区域是靠其他按钮控制的。
-    // // 第二种方案，当一个点击时，其他都关闭
-    // allHide.on('click', function(){
-    //     // 所有元素都缩回
-    //     allHide.hide();
-    //     // 点击元素展开
-    //     $(this).show();
-    // });
 
     // footer 下各BT点击
     $('#addMore').on('click', function(){
@@ -145,55 +150,55 @@ function get_datepicker_option (sHours,setMinutes){
         }
     }
     return datepicker_option
-}
-
+};
 var Started_option = get_datepicker_option(9,30);
 var Deadline_option = get_datepicker_option(18,30);
-
 $('#timepicker-Started').datepicker(Started_option);
 $('#timepicker-Deadline').datepicker(Deadline_option);
 
+// 时间格式选项
+var timeOptions = {
+    day:'numeric', month:'numeric', year:'numeric'
+};
 
 // 执行数据保存，并向 todolist 中 push 新数据
 function CheckSaveAndPush(){
     // 获取表单信息
     let todoTextarea = $('#todoTextarea').val();
     let selectPriority = $('#selectPriority').val();
-    let timepickerStarted = $('#timepicker-Started').val();
+    // 更新：不获取开始时间，而默认以创建时时间为准；
+    // let timepickerStarted = $('#timepicker-Started').val();
+    let timepickerStarted = new Date();
+    // 不用检测，直接输入为 r-可验证的内容
+    let rtimepickerStarted = new Intl.DateTimeFormat('en-US', timeOptions).format(timepickerStarted);
     let timepickerDeadline = $('#timepicker-Deadline').val();
     // 进行表单信息审核
     // 时间信息审核，使用正则表达式
     let timeCheck = /(\d{2}\/\d{2}\/\d{4}\s{1}\d{2}\:\d{2}\s{1}(am|pm))/i;
     let selectPriorityCheck = /(low|medium|high)/i;
-    if(timeCheck.test(timepickerStarted)){
-        // 获取匹配到有用部分，以避免添加前缀后缀
-        var rtimepickerStarted = RegExp.$1;
-        if(timeCheck.test(timepickerDeadline)){
-            var rtimepickerDeadline = RegExp.$1;
-            // 此时需要进行一个检测
-            var _rtimepickerStarted = new Date(rtimepickerStarted);
-            var _rtimepickerDeadline = new Date(rtimepickerDeadline);
-            if(_rtimepickerStarted.getTime() > _rtimepickerDeadline.getTime()){
-                msg('结束时间不得小于开始时间');
-                return false
-            }
-            if(todoTextarea.length > 0){
-                if(selectPriorityCheck.test(selectPriority)){
-                    var rselectPriority = RegExp.$1;
-                    // 此处应该执行一个保存和push的函数
-                    saveData(rtimepickerStarted,rtimepickerDeadline,rselectPriority,todoTextarea);
-                    pushData(rtimepickerStarted,rtimepickerDeadline,rselectPriority,todoTextarea);
-                    return true;
-                }else{
-                    msg('请勿直接输入或修改内容');
-                    return false;
-                }
+    if(timeCheck.test(timepickerDeadline)){
+        var rtimepickerDeadline = RegExp.$1;
+        // 此时需要进行一个检测 Started 就是初始时间即可
+        var _rtimepickerDeadline = new Date(rtimepickerDeadline);
+        // 这块检测的就是实际时间，但是保存的是天
+        if(timepickerStarted.getTime() > _rtimepickerDeadline.getTime()){
+            msg('结束时间不得小于开始时间');
+            return false
+        };
+        if(todoTextarea.length > 0){
+            if(selectPriorityCheck.test(selectPriority)){
+                var rselectPriority = RegExp.$1;
+                // 此处应该执行一个保存和push的函数
+                saveData(rtimepickerStarted,rtimepickerDeadline,rselectPriority,todoTextarea);
+                // 由于 save 后直接重新加载，故现在没有必要 push
+                // pushData(rtimepickerStarted,rtimepickerDeadline,rselectPriority,todoTextarea);
+                return true;
             }else{
-                msg('输入内容不可为空');
+                msg('请勿直接输入或修改内容');
                 return false;
             }
         }else{
-            msg('请点击选择有效日期');
+            msg('输入内容不可为空');
             return false;
         }
     }else{
@@ -202,39 +207,32 @@ function CheckSaveAndPush(){
     }
 }
 
-// 封装一个 tips 函数，用于 tips 的出现和消失以及后面可能制作的其他动效
-function tipsShow(tipId){
-    let $tipId = '#' + tipId;
-    $($tipId).show();
-    setTimeout(function(){
-        $($tipId).hide();
-    },1500)
-}
-
 // saveData 保存数据到 localStorage 中
 // storageData 页面加载完毕后，从本地数据库中获取的原始数据。
 // 获取原始数据，在原始数据中添加内容，然后再保存进去
 function saveData(rtimepickerStarted,rtimepickerDeadline,rselectPriority,todoTextarea){
     try{
         let storageData = localStorage.getItem('myToDo');
+        // 第一次保存时 storage 显示为空 null 
+        storageData == null ? storageData = '': storageData;
         let _saveData = todoTextarea + '<*>' + rtimepickerStarted + '<*>' + rtimepickerDeadline + '<*>' + rselectPriority;
-        let newStorageData = storageData + _saveData + ';';
+        let newStorageData = storageData + _saveData + '</;>';
         localStorage.setItem('myToDo', newStorageData);
     }catch(err){}
 }
 
 // pushData 将数据 push 到当前 todoListContainer.todoList 中
-function pushData(rtimepickerStarted,rtimepickerDeadline,rselectPriority,todoTextarea){
-    try{
-        let _pushData = {};
-        _pushData.Text = todoTextarea;
-        _pushData.Started = rtimepickerStarted;
-        _pushData.Deadline = rtimepickerDeadline;
-        _pushData.Priority = rselectPriority;
-        initializationData.push(_pushData);
-        todoListInTotals.inTotals = todoListInTotals.inTotals + 1;
-    }catch(err){}
-}
+// function pushData(rtimepickerStarted,rtimepickerDeadline,rselectPriority,todoTextarea){
+//     try{
+//         let _pushData = {};
+//         _pushData.Text = todoTextarea;
+//         _pushData.Started = rtimepickerStarted;
+//         _pushData.Deadline = rtimepickerDeadline;
+//         _pushData.Priority = rselectPriority;
+//         initializationData.push(_pushData);
+//         todoListInTotals.inTotals = todoListInTotals.inTotals + 1;
+//     }catch(err){}
+// }
 
 // 提示框
 function msg(text, t=2){
@@ -244,30 +242,16 @@ function msg(text, t=2){
     });
 }
 
-// 绑定一个方法，但是问题是这样会不会导致一个 list 上绑定过度事件？
-function todoItemOperation(ifInitialization){
-    if(ifInitialization){
-        $('.icon-operation').on('click', function(){
-            $(this).parent().prev().find('.todoList-li-content-property').toggle();
-        });
-    }else{
-        $('.icon-operation:last').on('click', function(){
-            $(this).parent().prev().find('.todoList-li-content-property').toggle();
-        });
-    }
-
-}
-
-// ToDoItem 倒计时渲染
-function countDown(){
-    $('.todoList-li').each(
-        function(){
-            let _timeRange = $(this).find('i.todoList-li-content-property-timerange').text();
-            let _Deadline = new Date(_timeRange.split('-')[1]);
-            let _countDown = _Deadline - new Date();
-            // 转换为小时
-            let _countDownHour = _countDown/1000/60/60 * -1;
-            $(this).find('p.todoList-CountDown b').text(_countDownHour.toFixed(1)); 
-        }
-    )
-}
+// // 绑定一个方法，但是问题是这样会不会导致一个 list 上绑定过度事件？
+// // 尝试直接绑定在组件上
+// function todoItemOperation(ifInitialization){
+//     if(ifInitialization){
+//         $('.icon-operation').on('click', function(){
+//             $(this).parent().prev().find('.todoList-li-content-property').toggle();
+//         });
+//     }else{
+//         $('.icon-operation:last').on('click', function(){
+//             $(this).parent().prev().find('.todoList-li-content-property').toggle();
+//         });
+//     }
+// }
