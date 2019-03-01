@@ -43,14 +43,16 @@ var todoItem = {
                 }
             },
             countDownColor: function(){
-                let _countDown = this.countDown;
-                if(_countDown == '>1k' || _countDown < -168){
-                    return '#58D68D'
-                }else if(_countDown > -24){
+                let now = new Date();
+                let Deadline = new Date(this.todoli.Deadline);
+                let _countDown = (Deadline - now)/1000/60/60;
+                if(_countDown > 168){
                     return '#C0392B'
-                }else if(_countDown < -24){
+                }else if(_countDown > 24){
                     return '#5499C7'
-                }else if(_countDown == '超时'){
+                }else if(_countDown < 24){
+                    return '#58D68D'
+                }else if(_countDown < 0){
                     return '#ff0000'
                 }
 

@@ -58,8 +58,9 @@ $(document).ready(function(){
             content: '您是否确定清空 todoList？',
             btn: ['确定', '返回'],
             yes: function(index){
-                localStorage.clear();
-                initializationData = [];
+                // localStorage.clear();
+                // initializationData = [];
+                storageData = [];
                 todoListContainer.todoList = [];
                 todoListInTotals.inTotals = 0;
                 // 插入一个提示框
@@ -80,16 +81,21 @@ $(document).ready(function(){
     // todoliRemove 控制删除（vue 列表 & 数据库）
     $('div.todoList-li-operation i.icon-operation').on('click',function(){
         let _index = $(this).parents('.todoList-li').attr('key');
-        // 数据刷新
-        initializationData.splice(_index,1);
-        // 数据存储
-        let storageData = localStorage.getItem('myToDo');
-        // 这块产生的原因时，splice 会抛出删除的内容，哦 storageData.split('</;>') 返回一个新数组
-        let newStorageData = storageData.split('</;>');
-        newStorageData.splice(_index,1);
-        newStorageData = newStorageData.join('</;>')
-        // console.log(_index, storageData);
-        localStorage.setItem('myToDo', newStorageData);
+        // 数据刷新 - 刷新 vue 的绑定的数组对象
+        storageData.splice(_index,1);
+        // 数据删除 - 删除指定 inprogress 内的数据
+        _objectDB.removeData('inprogress', _index);
+        // 所删除数据,在 abandon 中添加
+        _objectDB.add('abandon', )
+
+        // // 数据存储
+        // let storageData = localStorage.getItem('myToDo');
+        // // 这块产生的原因时，splice 会抛出删除的内容，哦 storageData.split('</;>') 返回一个新数组
+        // let newStorageData = storageData.split('</;>');
+        // newStorageData.splice(_index,1);
+        // newStorageData = newStorageData.join('</;>')
+        // // console.log(_index, storageData);
+        // localStorage.setItem('myToDo', newStorageData);
         todoListInTotals.inTotals--;
     });
 
