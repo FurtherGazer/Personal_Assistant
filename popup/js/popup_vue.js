@@ -5,7 +5,8 @@ _objectDB.openDB();
 
 // 获取存储在 'inprogress' 中的所有原始数据，通过数据遍历完成
 var storageData = new Array();
-_objectDB.readAllData('inprogress',DB_storageData)
+// console.log(_objectDB)
+// _objectDB.readAllData('inprogress')
 
 
 
