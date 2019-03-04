@@ -59,6 +59,7 @@ var todoItem = {
             },
         },
         methods: {
+            // 删除并加入回收站
             delThisItem: function(){
                 // console.log(this) // 进行一下测试，发现完全可以指向自身实例(this)
                 // console.log(this.$el.attributes) // 此处返回的是一个 element 元素
@@ -74,6 +75,18 @@ var todoItem = {
                 _parent.todoList.splice(_key,1);
                 // 这块因为 _dbId: stirng 的原因，卡了很久，因为这块必须要用 number
                 _objectDB.deleteData('inprogress', _dbId*1);
+                todoListInTotals.inTotals--;
+            },
+            // 完成
+            completeThisItem: function(){
+                var _thisElement = this.$el;
+                let _key = _thisElement.getAttribute('key');
+                let _dbId = _thisElement.getAttribute('dbid');
+                let _parent = this.$options.parent; 
+                _objectDB.addData('completed', _parent.todoList[_key]);
+                _parent.todoList.splice(_key,1);
+                _objectDB.deleteData('inprogress', _dbId*1);
+                todoListInTotals.inTotals--;
             },
         },
         template:  `<div class='todoList-li flex-box'>
@@ -88,34 +101,8 @@ var todoItem = {
                             </div>
                         </div>
                         <div class='todoList-li-operation flex-box'>
-                            <i class="fa fa-trash-o icon-operation" v-on:click='delThisItem'></i>
+                            <i class="fa fa-flag-o icon-operation" v-on:click='completeThisItem'></i>
+                            <i class="fa fa-trash-o icon-operation" style='padding-left:10px;' v-on:click='delThisItem'></i>
                         </div>
                     </div>`,
 };
-
-
-
-// 之前的模板，对此进行简化
-// var template2 = `<div class='todoList-li flex-box'>
-// <div class='todoList-li-label' v-bind:style="{backgroundColor: labelColor}"></div>
-// <div class='todoList-li-Left flex-box' v-bind:style="{color: countDownColor}">
-//     <p class='todoList-CountDown'><b>{{ countDown }}</b></p>
-//     <i class='todoList-CountDown'>hours</i>
-// </div>
-// <div class='todoList-li-content flex-box'>
-//     <div class='todoList-li-content-text'>
-//         <p class='todoList-li-content-p'>{{ abstract }}</p>
-//     </div>
-//     <div class='todoList-li-content-property'>
-//         <div>
-//             <p class='todoList-li-content-property-p'>TimeRange: <i class='todoList-li-content-property-timerange'>{{ todoli.Started }} - {{ todoli.Deadline }}</i></p>
-//         </div>
-//         <div>
-//             <p class='todoList-li-content-property-p'>Priority: {{ todoli.Priority }}</p>
-//         </div>
-//     </div>
-// </div>
-// <div class='todoList-li-operation flex-box'>
-//     <i class="fa fa-cogs icon-operation"></i>
-// </div>
-// </div>`

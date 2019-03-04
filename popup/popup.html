@@ -62,43 +62,24 @@
 				<input class='search-input' placeholder='Input keywords for search...'>
 				<i class="fa fa-search icon-search"></i>
 			</div>
-			<!-- TODO LIST CONTNT -->
+			<!-- TODO LIST CONTNT —— INPROGRESS -->
 			<div id='todoList-container' class='todoList-container flex-box'>
+				<!-- Tabs <completed / inprogress / abandon> -->
+				<div class='todoList-container-tabs flex-box'>
+					<button
+						v-for="tab in tabs"
+						v-bind:key="tab"
+						v-bind:class="['tab-button', { active: currentTab === tab }]"
+						v-on:click="currentTab = tab"
+					>{{ tab }}</button>
+				</div>
 				<!-- Vue 实例 -->
-				<!-- :key 是 v-bind: 的缩写 -->
-				<!-- index 在这里是一个可选参数 -->
-				<!-- 此处 :key 之前使用的是 index 但是为了更好的和数据库内的数据耦合，使用 todoli.id -->
 				<todoli
 					v-for="(index,todoli) in todoList"
 					:dbId=todoli.id
 					:key=index
 					:todoli="todoli"
 				></todoli>
-
-				<!-- 测试区 -->
-				<!-- <div class='todoList-li flex-box'>
-					<div class='todoList-li-label' style=""></div>
-					<div class='todoList-li-Left flex-box'>
-						<p class='todoList-CountDown'><b>-6h</b></p>
-					</div>
-					<div class='todoList-li-content flex-box'>
-						<div class='todoList-li-content-text'>
-							<p class='todoList-li-content-p'>test...</p>
-						</div>
-						<div class='todoList-li-content-property'>
-							<div>
-								<p class='todoList-li-content-property-p'>TimeRange: 01/29/2019 09:30 am - 01/29/2019 09:30 am</p>
-							</div>
-							<div>
-								<p class='todoList-li-content-property-p'>Priority: high</p>
-							</div>
-						</div>
-					</div>
-					<div class='todoList-li-operation flex-box'>
-						<i class="fa fa-cogs icon-operation"></i>
-					</div>
-				</div> -->
-
 			</div>
 		</div>
 

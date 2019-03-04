@@ -159,7 +159,8 @@ var ClassIndexedDB = /** @class */ (function () {
         return outData;
     };
     // 遍历数据
-    ClassIndexedDB.prototype.readAllData = function (storeName, outDataArray) {
+    ClassIndexedDB.prototype.readAllData = function (storeName, outDataArray, funcOnComplete) {
+        if (funcOnComplete === void 0) { funcOnComplete = function () { }; }
         // console.log(this._DB.db);
         if (typeof storeName == 'undefined') {
             console.error('readData Error! storeName is necessary!');
@@ -186,6 +187,8 @@ var ClassIndexedDB = /** @class */ (function () {
                 cursor["continue"]();
             }
             else {
+                // 执行回调
+                funcOnComplete();
                 console.log('Finished, no more data!');
             }
         };
@@ -217,14 +220,11 @@ var ClassIndexedDB = /** @class */ (function () {
             console.error('readData Error! storeName&key is necessary!');
             return false;
         }
-        // 这块的问题在于由于是异步的,无法使用这种阻塞式的方式去
-        // var _getData = this.getData(storeName,key);  // 不用 get ，不在 API 内做复杂调用
         var db = this._DB.db;
         var stores = [];
         stores.push(storeName);
         var request = db.transaction(stores, 'readwrite')
             .objectStore(storeName)["delete"](key);
-        console.log(stores, storeName);
         request.onsuccess = function (event) {
             // delete 无论是否成功删除，都会进入 success 环节。
             console.log('delete Success!');
@@ -232,7 +232,25 @@ var ClassIndexedDB = /** @class */ (function () {
         request.onerror = function (event) {
             console.log('delete Error!');
         };
-        // return _getData;
+    };
+    // clear 数据清空
+    ClassIndexedDB.prototype.clearData = function (storeName) {
+        if (typeof storeName == 'undefined') {
+            console.error('readData Error! storeName is necessary!');
+            return false;
+        }
+        var db = this._DB.db;
+        var stores = [];
+        stores.push(storeName);
+        var request = db.transaction(stores, 'readwrite')
+            .objectStore(storeName)
+            .clear();
+        request.onsuccess = function (event) {
+            console.log('clear Success!');
+        };
+        request.onerror = function (event) {
+            console.log('clear Error!');
+        };
     };
     return ClassIndexedDB;
 }());

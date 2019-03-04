@@ -19,7 +19,12 @@ var storageData = new Array();
 // 数据库初始化&打开
 // 这块涉及一个传参的坑，例如 var test = function(a,b){console.log(a,b)}
 // test(b=3) [out] 3,undefined ——> 也就是说 b=3 的参数指引没有起作用，实际还是顺序传值
-_objectDB.openDB(undefined, function(){_objectDB.readAllData('inprogress',storageData)});
+_objectDB.openDB(undefined, function(){
+    _objectDB.readAllData('inprogress',storageData, function(){
+        console.log(storageData);
+        todoListInTotals.inTotals = storageData.length;
+    })
+});
 
 // -------------- 数据示例 --------------
 // {Text:'test2', Started:'2019/2/16', Deadline:'2019/3/1', Priority:'high'}
@@ -85,6 +90,8 @@ _objectDB.openDB(undefined, function(){_objectDB.readAllData('inprogress',storag
 var todoListContainer = new Vue({
     el:'#todoList-container',
     data: {
+        currentTab: 'Home',
+        tabs: ['Home', 'Posts', 'Archive'],
         todoList: storageData,
     },
     components: {

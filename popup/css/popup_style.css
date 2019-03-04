@@ -131,7 +131,7 @@ p {
     flex-direction: column;
     /* padding: 0px 15px; */
     word-wrap:break-word;
-    width: 80%;
+    width: 75%;
 }
 .todoList-li-content-text {
     word-wrap:break-word;
@@ -153,7 +153,7 @@ p {
     /* border-left: 1px solid #f1f1f1; */
 }
 .todoList-li-operation {
-    width: 10%;
+    width: 15%;
     /* background-color: #1e1e1e */
     justify-content: center;
     align-items: center;
@@ -237,4 +237,17 @@ p {
 .fade-enter, .fade-leave-to /* .fade-leave-active below version 2.1.8 */ {
     opacity: 0;
     background-color: aliceblue
+}
+.todoList-container-tabs {
+    padding-bottom: 1px;
+}
+.tab-button {
+    padding: 6px 10px;
+    border-top-left-radius: 1px;
+    border-top-right-radius: 1px;
+    border: 1px solid #ccc;
+    cursor: pointer;
+    background: #f0f0f0;
+    margin-bottom: -1px;
+    margin-right: -1px;
 }

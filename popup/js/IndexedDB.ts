@@ -163,7 +163,7 @@ class ClassIndexedDB {
         return outData;
     }
     // 遍历数据
-    readAllData(storeName: string, outDataArray?){
+    readAllData(storeName: string, outDataArray?, funcOnComplete=function(){}){
         // console.log(this._DB.db);
         if(typeof storeName == 'undefined'){
             console.error('readData Error! storeName is necessary!');
@@ -189,6 +189,8 @@ class ClassIndexedDB {
                 outDataArray.push(_value);
                 cursor.continue();
             }else{
+                // 执行回调
+                funcOnComplete();
                 console.log('Finished, no more data!');
             }
         };
@@ -220,8 +222,6 @@ class ClassIndexedDB {
             console.error('readData Error! storeName&key is necessary!');
             return false;
         }
-        // 这块的问题在于由于是异步的,无法使用这种阻塞式的方式去
-        // var _getData = this.getData(storeName,key);  // 不用 get ，不在 API 内做复杂调用
         let db = this._DB.db;
         let stores = [];
         stores.push(storeName);
@@ -235,6 +235,24 @@ class ClassIndexedDB {
         request.onerror = function(event){
             console.log('delete Error!');
         }
-        // return _getData;
+    }
+    // clear 数据清空
+    clearData(storeName: string){
+        if(typeof storeName == 'undefined'){
+            console.error('readData Error! storeName is necessary!');
+            return false;
+        }
+        let db = this._DB.db;
+        let stores = [];
+        stores.push(storeName);
+        let request = db.transaction(stores, 'readwrite')
+            .objectStore(storeName)
+            .clear();
+        request.onsuccess = function(event){
+            console.log('clear Success!');
+        }
+        request.onerror = function(event){
+            console.log('clear Error!');
+        }
     }
 }

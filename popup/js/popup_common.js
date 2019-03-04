@@ -55,23 +55,23 @@ $(document).ready(function(){
     $('#header-operation-delAll').on('click', function(){
         //询问框
         layer.open({
-            content: '您是否确定清空 todoList？',
+            content: '您是否确定要对 todoList 进行初始化？',
             btn: ['确定', '返回'],
             yes: function(index){
-                // localStorage.clear();
-                // initializationData = [];
+                _objectDB.deleteDB('myDB');
                 storageData = [];
                 todoListContainer.todoList = [];
                 todoListInTotals.inTotals = 0;
                 // 插入一个提示框
-                msg('todoList 已清空，你可以在回收车中找到清空内容')
+                msg('已完成初始化');
+                setTimeout(function(){location.reload(); },1000);
             }
         });
     });
 
     // 点击 header-operation-about 时
     $('#header-operation-about').on('click', function(){
-        msg('当前版本：beta v0.01')
+        msg('当前版本：beta v0.02')
     });
 
     // 点击 icon-operation 时展开 todo 属性
@@ -115,7 +115,7 @@ $(document).ready(function(){
         },500)
     });
 
-    // footer 下各BT点击
+    // addMore
     $('#addMore').on('click', function(){
         $(this).hide();
         contentToDoList.hide();
@@ -125,8 +125,10 @@ $(document).ready(function(){
     // save
     $('#save').on('click', function(){
         if(CheckSaveAndPush()){
-            // 重新加载（这种方法有点取巧）
-            location.reload();
+            // 重新加载（这种方法有点取巧）- 由于现在方法直接绑定在组件上，所以无需如此
+            // 但是由于没有办法直接获取 新生成实例的 id / key 
+            location.reload(); 
+
         }
     });
     // cancel
@@ -200,9 +202,8 @@ function CheckSaveAndPush(){
         if(todoTextarea.length > 0){
             if(selectPriorityCheck.test(selectPriority)){
                 var rselectPriority = RegExp.$1;
-                // 此处应该执行一个保存和push的函数
+                // 此处应该执行一个save和push的函数
                 saveData(rtimepickerStarted,rtimepickerDeadline,rselectPriority,todoTextarea);
-                // 由于 save 后直接重新加载，故现在没有必要 push
                 // pushData(rtimepickerStarted,rtimepickerDeadline,rselectPriority,todoTextarea);
                 return true;
             }else{
@@ -241,6 +242,7 @@ function saveData(rtimepickerStarted,rtimepickerDeadline,rselectPriority,todoTex
 }
 
 // pushData 将数据 push 到当前 todoListContainer.todoList 中
+// 不能使用 push 的原因在于，不确定数据的 key 和 id.
 // function pushData(rtimepickerStarted,rtimepickerDeadline,rselectPriority,todoTextarea){
 //     try{
 //         let _pushData = {};
