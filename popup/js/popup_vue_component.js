@@ -58,6 +58,24 @@ var todoItem = {
 
             },
         },
+        methods: {
+            delThisItem: function(){
+                // console.log(this) // 进行一下测试，发现完全可以指向自身实例(this)
+                // console.log(this.$el.attributes) // 此处返回的是一个 element 元素
+                var _thisElement = this.$el;
+                let _key = _thisElement.getAttribute('key');
+                let _dbId = _thisElement.getAttribute('dbid');
+                // 这块应该直接对其父实例的元素进行修改，不绑定外面定义的变量。
+                let _parent = this.$options.parent; // 此处的引用指向同一个作用域
+                // console.log(_parent.todoList);
+                // 加入回收站
+                _objectDB.addData('abandon', _parent.todoList[_key]);
+                // 实例中数据删除
+                _parent.todoList.splice(_key,1);
+                // 这块因为 _dbId: stirng 的原因，卡了很久，因为这块必须要用 number
+                _objectDB.deleteData('inprogress', _dbId*1);
+            },
+        },
         template:  `<div class='todoList-li flex-box'>
                         <div class='todoList-li-label' v-bind:style="{backgroundColor: labelColor}"></div>
                         <div class='todoList-li-Left flex-box' v-bind:style="{color: countDownColor}">
@@ -70,7 +88,7 @@ var todoItem = {
                             </div>
                         </div>
                         <div class='todoList-li-operation flex-box'>
-                            <i class="fa fa-trash-o icon-operation"></i>
+                            <i class="fa fa-trash-o icon-operation" v-on:click='delThisItem'></i>
                         </div>
                     </div>`,
 };

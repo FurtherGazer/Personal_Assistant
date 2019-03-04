@@ -4,21 +4,24 @@ class ClassIndexedDB {
     _DB: any; // 数据库对象
     // _version: number; // 数据库版本 ... 这个版本好像意义不大
     _storesName: string[]; // 数据库 ObjectStore
+    _indexsName: any[];
     _N:object = function(){};
     // 初始化的时候传入数据库名 & 表名，完成数据库的初始化
-    constructor(dbName:string, storesName: string[]){
+    constructor(dbName:string, storesName: string[], indexsName=null){
         this._dbName = dbName;
         this._storesName = storesName; // 似乎直接在构造器中设计不太好，因为没有考虑到已存在表的情况
         this._DB = {
             name: this._dbName,
-            version: 1,
+            // version: 1,
             db: null
         };
+        this._indexsName = indexsName;
     }
-    // 打卡数据库
+    // 打开数据库
     // 联合类型 number | null
     // 因为新建数据库的时候不需要 version，这块应该选择使用可选类型 version? 标识这个函数可选
-    openDB(version?: number){
+    // funcSucc = function(){} 相当于为可选参数设定了默认值
+    openDB(version?: number, funcSucc = function(){}){
         if(typeof version == 'undefined'){
             // 因为 if 是一个块级作用域，所以在 if 内使用 let,实际定义的 version 是块级作用域内的 version
             // if(this._version){
@@ -32,21 +35,27 @@ class ClassIndexedDB {
         }else{
             var request = window.indexedDB.open(this._dbName, version); // IDBOpenDBRequest 对象
         }
-        var openDB_DB = this._DB;
-        var openDB_stores = this._storesName; 
+        var rootThis = this;
+        // var openDB_DB = this._DB;
+        // var openDB_stores = this._storesName; 
         // indexedDB.open() 中 version 是 optional 的
-        
-        console.log(openDB_DB, openDB_stores, request, version);
+        // console.log(rootThis);
+
         request.onerror = function (e) {
             console.log(e.currentTarget.error.message);
             console.log('openDB Error!')
         };
         request.onsuccess = function (e) {
-            openDB_DB.db = e.target.result;
+            rootThis._DB.db = e.target.result;
             // 我知道了，因为 openDB_stores 这个时候又指向了一个新地址，所以其实并没有影响到 this._storesName，我只考虑了之前，没有考虑到之后
-            openDB_stores = openDB_DB.db.objectStoreNames; // 这块现在问题就在于作用域的问题
+            // rootThis._storesName = rootThis._DB.db.objectStoreNames; // 这块现在问题就在于作用域的问题，这块直接的引用造成了新的问题
+            // 因为 objectStoreNames 是一个 DOMString 类型，而不是 string[] 类型
+            rootThis._storesName = Array.from(rootThis._DB.db.objectStoreNames);
 
-            console.log(openDB_DB.db)
+            // 执行函数回调
+            funcSucc();
+
+            // console.log(rootThis._DB.db)
             console.log('openDB Success!');
         };
         // 如果指定的版本号，大于数据库的实际版本号，就会发生数据库升级事件
@@ -55,9 +64,17 @@ class ClassIndexedDB {
         // 这里返回的 e 是 IDBVersionChangeEvent 对象
         request.onupgradeneeded = function (e) {
             var db = e.target.result;
-            for(let i in openDB_stores){
-                if (!db.objectStoreNames.contains(openDB_stores[i])) {
-                    db.createObjectStore(openDB_stores[i], { autoIncrement: true });
+            for(let i in rootThis._storesName){
+                if (!db.objectStoreNames.contains(rootThis._storesName[i])) {
+                    // 三个对象仓库的索引都是公用的，所以此处继续为对象仓库创建索引
+                    var objectStore = db.createObjectStore(rootThis._storesName[i], { autoIncrement: true });
+                    // 先测试一下，需要创建索引对象，循环为 objectStore 添加索引
+                    // 索引对象包括：索引名称 / 索引所在的属性 / 配置对象（{ unique: false }）是否包含重复的值这种。
+                    if(rootThis._indexsName){
+                        for(let j in rootThis._indexsName){
+                            objectStore.createIndex(rootThis._indexsName[j].name, rootThis._indexsName[j].prop, rootThis._indexsName[j].obj);
+                        }
+                    }
                 }
             }
             console.log(`DB version from ${e.oldVersion} changed to ${e.newVersion}`);
@@ -66,7 +83,7 @@ class ClassIndexedDB {
     // 添加新的表，就是嵌套一个 openDB ，然后在 _storesName 内 push 新值
     addObjectStore(newStoreName:string){
         // 检查所添加 ObjectStore 是否存在
-        if(this._storesName.indexOf(newStoreName) != -1){
+        if(this._storesName.includes(newStoreName)){
             console.log('The objectStore has already exist!');
             return false
         }
@@ -77,16 +94,16 @@ class ClassIndexedDB {
         this.closeDB();
         this.openDB(_version);
     }
-    // 关闭数据库
+    // 关闭数据库：必须先打开数据库，然后才可以关闭书库
     closeDB(){
-        this._DB.db.close();
+        this._DB.db ? this._DB.db.close() : console.log('The IndexedDB not open.');
     }
     // 删除数据库 - 删除数据库后，IndexedDB 中相应的数据库消失，但是会保留 a 对象中的数据
     deleteDB(){
         indexedDB.deleteDatabase(this._dbName);
     }
     // 添加数据
-    addData(storeName: string, addObject: any){
+    addData(storeName: string, addObject: any, funcOnComplete=function(){}){
         if(typeof storeName == 'undefined' || typeof addObject == 'undefined'){
             console.error('addData Error! storeName&addObject is necessary!');
             return false;
@@ -96,9 +113,15 @@ class ClassIndexedDB {
         // push 返回值 - 把指定的值添加到数组后的新长度；
         stores.push(storeName);
         // console.log(stores, storeName);
-        let request = db.transaction(stores, 'readwrite')
+        let _transaction = db.transaction(stores, 'readwrite');
+        console.log(_transaction)
+        let request = _transaction
             .objectStore(storeName)
             .add(addObject);
+        _transaction.oncomplete = function (event) {
+            console.log('addData transaction complete!');
+            funcOnComplete();
+        };
         request.onsuccess = function (event) {
             console.log('addData Success!');
         };
@@ -141,6 +164,7 @@ class ClassIndexedDB {
     }
     // 遍历数据
     readAllData(storeName: string, outDataArray?){
+        // console.log(this._DB.db);
         if(typeof storeName == 'undefined'){
             console.error('readData Error! storeName is necessary!');
             return false;
@@ -156,11 +180,13 @@ class ClassIndexedDB {
             let cursor = event.target.result;
             if (cursor) {
                 let _key = cursor.key, _value = cursor.value;
-                let _kV = {};
-                _kV[_key] = _value;
-                console.log('key: ' + _key);
-                console.log('value: ' + _value);
-                outDataArray.push(_kV);
+                // 这块数据格式不好，需要替换
+                // _kV[_key] = _value; 这种方式再后续数据处理的时候造成不必要的麻烦
+                // 这样写不行，index会失效
+                if('push' in _value){
+                    _value.id = _key;
+                }
+                outDataArray.push(_value);
                 cursor.continue();
             }else{
                 console.log('Finished, no more data!');
@@ -195,7 +221,7 @@ class ClassIndexedDB {
             return false;
         }
         // 这块的问题在于由于是异步的,无法使用这种阻塞式的方式去
-        var _getData = this.getData(storeName,key); 
+        // var _getData = this.getData(storeName,key);  // 不用 get ，不在 API 内做复杂调用
         let db = this._DB.db;
         let stores = [];
         stores.push(storeName);
@@ -203,11 +229,12 @@ class ClassIndexedDB {
             .objectStore(storeName)
             .delete(key);
         request.onsuccess = function(event){
+            // delete 无论是否成功删除，都会进入 success 环节。
             console.log('delete Success!');
         }
         request.onerror = function(event){
             console.log('delete Error!');
         }
-        return _getData;
+        // return _getData;
     }
 }

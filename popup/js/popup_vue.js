@@ -1,13 +1,45 @@
 // 数据库库名：myDB - completed（已完成）/ inprogress（正在进行中）/ abadndon（放弃）
-var _objectDB = new ClassIndexedDB('myDB',['completed','inprogress','abandon']);
-// 数据库初始化&打开
-_objectDB.openDB();
+var _objectDB = new ClassIndexedDB(
+    'myDB',
+    ['completed','inprogress','abandon'],
+    [
+        {name:'Priority', prop:'Priority', obj:{ unique: false }},
+        {name:'Started', prop:'Started', obj:{ unique: false }}
+    ],
+    );
 
 // 获取存储在 'inprogress' 中的所有原始数据，通过数据遍历完成
 var storageData = new Array();
-// console.log(_objectDB)
-// _objectDB.readAllData('inprogress')
 
+// console.log(_objectDB)
+// 哦，想起来了，问题不是遍历数组输出，而是执行 .readAllData 的时候，open 还没有执行完毕
+// 向这种在 open 的 onSuccess 中执行的函数，应该在 open 中传入回调。
+// _objectDB.readAllData('inprogress',storageData)
+
+// 数据库初始化&打开
+// 这块涉及一个传参的坑，例如 var test = function(a,b){console.log(a,b)}
+// test(b=3) [out] 3,undefined ——> 也就是说 b=3 的参数指引没有起作用，实际还是顺序传值
+_objectDB.openDB(undefined, function(){_objectDB.readAllData('inprogress',storageData)});
+
+// -------------- 数据示例 --------------
+// {Text:'test2', Started:'2019/2/16', Deadline:'2019/3/1', Priority:'high'}
+// -------------- 原始数据示例（遍历返回的数据） --------------
+// {{id:1, Text:'test2', Started:'2019/2/16', Deadline:'2019/3/1', Priority:'high'}}
+
+
+
+// vue 数据构造
+// var vstorageData = new Array();
+// for(let i in storageData){
+//     let _key = storageData[i].key;
+//     let _value = storageData[i].value;
+//     // 这个时候 _value 对应的应该是一个数组对象
+//     // 判断是否有 push 属性
+//     if('push' in _value){
+//         _value.id = _key;
+//         vstorageData.push(_value);
+//     }
+// }
 
 
 // 存储在 localStorage 中的原始数据内容（这块考虑要不要分日期存储），如果分日期存储，可能需要考虑组件嵌套的情况
@@ -57,7 +89,7 @@ var todoListContainer = new Vue({
     },
     components: {
         'todoli':todoItem,
-    }
+    },
 });
 
 // 这个文件是实例化的 Vue 对象

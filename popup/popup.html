@@ -67,9 +67,11 @@
 				<!-- Vue 实例 -->
 				<!-- :key 是 v-bind: 的缩写 -->
 				<!-- index 在这里是一个可选参数 -->
+				<!-- 此处 :key 之前使用的是 index 但是为了更好的和数据库内的数据耦合，使用 todoli.id -->
 				<todoli
 					v-for="(index,todoli) in todoList"
-					:key="index"
+					:dbId=todoli.id
+					:key=index
 					:todoli="todoli"
 				></todoli>
 

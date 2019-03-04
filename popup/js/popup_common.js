@@ -79,25 +79,31 @@ $(document).ready(function(){
     // todoItemOperation(true);
 
     // todoliRemove 控制删除（vue 列表 & 数据库）
-    $('div.todoList-li-operation i.icon-operation').on('click',function(){
-        let _index = $(this).parents('.todoList-li').attr('key');
-        // 数据刷新 - 刷新 vue 的绑定的数组对象
-        storageData.splice(_index,1);
-        // 数据删除 - 删除指定 inprogress 内的数据
-        _objectDB.removeData('inprogress', _index);
-        // 所删除数据,在 abandon 中添加
-        _objectDB.add('abandon', )
+    // 由于数据异步渲染的问题，此处涉及到数据增加/修改，都需要重新渲染
+    // $('div.todoList-li-operation i.icon-operation').on('click',function(){
+    //     let _key = $(this).parents('.todoList-li').attr('key');
+    //     let _dbId = $(this).parents('.todoList-li').attr('dbid')
+    //     // 数据刷新 - 刷新 vue 的绑定的数组对象
+    //     // 这块删除的数据的id 和 key 不一定一致。这块可以创建一个函数
+    //     // 获取需要删除 _index
+    //     // var _index = findTheKeyValue('id',_key,storageData);
+    //     // console.log(_index);
+    //     storageData.splice(_key,1);
+    //     // 所删除数据,在 abandon 中添加
+    //     _objectDB.addData('abandon', storageData[_dbId]);
+    //     // 数据删除 - 删除指定 inprogress 内的数据
+    //     _objectDB.removeData('inprogress', _dbId);
 
-        // // 数据存储
-        // let storageData = localStorage.getItem('myToDo');
-        // // 这块产生的原因时，splice 会抛出删除的内容，哦 storageData.split('</;>') 返回一个新数组
-        // let newStorageData = storageData.split('</;>');
-        // newStorageData.splice(_index,1);
-        // newStorageData = newStorageData.join('</;>')
-        // // console.log(_index, storageData);
-        // localStorage.setItem('myToDo', newStorageData);
-        todoListInTotals.inTotals--;
-    });
+    //     // // 数据存储
+    //     // let storageData = localStorage.getItem('myToDo');
+    //     // // 这块产生的原因时，splice 会抛出删除的内容，哦 storageData.split('</;>') 返回一个新数组
+    //     // let newStorageData = storageData.split('</;>');
+    //     // newStorageData.splice(_index,1);
+    //     // newStorageData = newStorageData.join('</;>')
+    //     // // console.log(_index, storageData);
+    //     // localStorage.setItem('myToDo', newStorageData);
+    //     todoListInTotals.inTotals--;
+    // });
 
     // 所有展开元素绑定一个自动缩回的行为
     // 感觉逻辑有些不慎合理，最好还是修改成，当点击这个元素时，其他元素都缩回
@@ -215,16 +221,23 @@ function CheckSaveAndPush(){
 
 // saveData 保存数据到 localStorage 中
 // storageData 页面加载完毕后，从本地数据库中获取的原始数据。
-// 获取原始数据，在原始数据中添加内容，然后再保存进去
+// 获取原始数据，在原始数据中添加内容，然后再保存进去 - 使用 indexedDB 每条数据都是独立的，所以此处不用转换格式先取出再替换
+// 直接调用接口存入即可
 function saveData(rtimepickerStarted,rtimepickerDeadline,rselectPriority,todoTextarea){
     try{
-        let storageData = localStorage.getItem('myToDo');
-        // 第一次保存时 storage 显示为空 null 
-        storageData == null ? storageData = '': storageData;
-        let _saveData = todoTextarea + '<*>' + rtimepickerStarted + '<*>' + rtimepickerDeadline + '<*>' + rselectPriority;
-        let newStorageData = storageData + _saveData + '</;>';
-        localStorage.setItem('myToDo', newStorageData);
-    }catch(err){}
+        // let storageData = localStorage.getItem('myToDo');
+        // // 第一次保存时 storage 显示为空 null 
+        // storageData == null ? storageData = '': storageData;
+        // let _saveData = todoTextarea + '<*>' + rtimepickerStarted + '<*>' + rtimepickerDeadline + '<*>' + rselectPriority;
+        // let newStorageData = storageData + _saveData + '</;>';
+        // localStorage.setItem('myToDo', newStorageData);
+        let storageData = new Array();
+        storageData.Text = todoTextarea;
+        storageData.Started = rtimepickerStarted;
+        storageData.Deadline = rtimepickerDeadline;
+        storageData.Priority = rselectPriority;
+        _objectDB.addData('inprogress',storageData);
+    }catch(err){console.log('func saveData Error!')}
 }
 
 // pushData 将数据 push 到当前 todoListContainer.todoList 中
@@ -259,5 +272,19 @@ function msg(text, t=2){
 //         $('.icon-operation:last').on('click', function(){
 //             $(this).parent().prev().find('.todoList-li-content-property').toggle();
 //         });
+//     }
+// }
+
+// /**
+//  * 
+//  * @param {string} key 所需查找的键
+//  * @param {string} value 所需查找的值
+//  * @param {Array} arrayLike 所需查找的Array对象
+//  */
+// function findTheKeyValue(key, value, arrayLike){
+//     for(let i in arrayLike){
+//         if(arrayLike[i][key] == value){
+//             return i;
+//         }
 //     }
 // }
