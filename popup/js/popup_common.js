@@ -128,7 +128,6 @@ $(document).ready(function(){
             // 重新加载（这种方法有点取巧）- 由于现在方法直接绑定在组件上，所以无需如此
             // 但是由于没有办法直接获取 新生成实例的 id / key 
             location.reload(); 
-
         }
     });
     // cancel
@@ -138,6 +137,36 @@ $(document).ready(function(){
         contentEditToDoItem.hide();
         $('#addMore').show();
     });
+
+    // header-operation-*
+    $('#header-operation-inprogress').on('click', function(){
+        todoListContainer.todoList = storageData;
+        todoListInTotals.inTotals = storageData.length;
+        todoListStatus.status = 'Inprogress';
+    });
+    $('#header-operation-abandon').on('click', function(){
+        if(typeof abandonStorage == 'undefined'){
+            var abandonStorage = new Array();
+            _objectDB.readAllData('abandon',abandonStorage, function(){
+                todoListInTotals.inTotals = abandonStorage.length;
+            })
+        }
+        todoListContainer.todoList = abandonStorage;
+        todoListInTotals.inTotals = abandonStorage.length;
+        todoListStatus.status = 'Abandon';
+    });
+    $('#header-operation-completed').on('click', function(){
+        if(typeof completedStorage == 'undefined'){
+            var completedStorage = new Array();
+            _objectDB.readAllData('completed',completedStorage, function(){
+                todoListInTotals.inTotals = completedStorage.length;
+            })
+        }
+        todoListContainer.todoList = completedStorage;
+        todoListInTotals.inTotals = completedStorage.length;
+        todoListStatus.status = 'Completed';
+    });
+
 
 });
 

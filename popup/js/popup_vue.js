@@ -87,11 +87,10 @@ _objectDB.openDB(undefined, function(){
 
 // 这块有个问题，由于 VUE 的数据绑定是绑定在 getter / setter 方法上的 ×
 // 经过测试发现，VUE 的绑定，绑定在引用元素上也是可以的。深度绑定？也就说给 initializationData 对象也绑定了 setter/getter 属性；
+// 回收站 / 已完成，最简单的实现方案是 todoListContainer.todoList 数据的替换。但是这样会导致数据重新渲染。
 var todoListContainer = new Vue({
     el:'#todoList-container',
     data: {
-        currentTab: 'Home',
-        tabs: ['Home', 'Posts', 'Archive'],
         todoList: storageData,
     },
     components: {
@@ -111,3 +110,9 @@ var todoListInTotals = new Vue({
     }
 });
 
+var todoListStatus = new Vue({
+    el:'#header-about-left',
+    data: {
+        status: 'Inprogress',
+    }
+});

@@ -39,8 +39,10 @@ p {
     font-size: 80%;
     display: none;
 }
-#header-operation-about,#header-operation-delAll {
-    width: 50%;
+#header-operation-about,#header-operation-delAll,
+#header-operation-completed,#header-operation-abandon,
+#header-operation-inprogress {
+    width: 25%;
 }
 .headline-font {
     padding: 0px;
@@ -250,4 +252,12 @@ p {
     background: #f0f0f0;
     margin-bottom: -1px;
     margin-right: -1px;
+}
+#todoListStatus {
+    border-radius: 12px 2px 12px 2px;
+    background-color: #a8a8a8;
+    padding: 2px 8px;
+    margin-left:15px; 
+    color: #fff;
+    font-size: 80%;
 }

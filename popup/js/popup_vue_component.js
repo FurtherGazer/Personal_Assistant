@@ -88,6 +88,14 @@ var todoItem = {
                 _objectDB.deleteData('inprogress', _dbId*1);
                 todoListInTotals.inTotals--;
             },
+            showDetail: function(){
+                // 希望达到的效果：点击后弹出底部弹窗包含详细文本信息。以便于查看，而且文本背景色和优先级有关
+                let text = this.todoli.Text;
+                layer.open({
+                    content:text,
+                    style: `background-color:${this.labelColor}`,
+                })
+            }
         },
         template:  `<div class='todoList-li flex-box'>
                         <div class='todoList-li-label' v-bind:style="{backgroundColor: labelColor}"></div>
@@ -95,13 +103,13 @@ var todoItem = {
                             <p class='todoList-CountDown'><b>{{ countDown }}</b></p>
                             <i class='todoList-CountDown'>hours</i>
                         </div>
-                        <div class='todoList-li-content flex-box'>
+                        <div class='todoList-li-content flex-box' v-on:click='showDetail'>
                             <div class='todoList-li-content-text'>
                                 <p class='todoList-li-content-p'>{{ abstract }}</p>
                             </div>
                         </div>
                         <div class='todoList-li-operation flex-box'>
-                            <i class="fa fa-flag-o icon-operation" v-on:click='completeThisItem'></i>
+                            <i class="fa fa-check-square-o icon-operation" v-on:click='completeThisItem'></i>
                             <i class="fa fa-trash-o icon-operation" style='padding-left:10px;' v-on:click='delThisItem'></i>
                         </div>
                     </div>`,

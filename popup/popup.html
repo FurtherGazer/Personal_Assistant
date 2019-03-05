@@ -25,7 +25,10 @@
 		<!-- HEADER-TOP -->
 		<div id='header-top' class='header-box flex-box'>
 			<div id='header-top-logo'>
-				<p class='headline-font' style='font-size:120%;color: #f1f1f1;'><strong>Personal</strong> Assistant</p>
+				<p class='headline-font' style='font-size:120%;color: #f1f1f1;'>
+					<strong>Personal</strong> Assistant
+					<i id='header-operation-about' class="fa fa-code icon-plus" style="padding: 5px"></i>
+				</p>
 			</div>
 			<div id='header-top-tool' class=' flex-box'>
 				<i class="fa fa-cog icon-tool"></i>
@@ -36,9 +39,19 @@
 			<!-- 通过套一个壳，以避免对下面布局的影响 -->
 			<div class='header-box flex-box' style="height:35px;">
 				<!-- 各大功能 -->
-				<div id='header-operation-about' class='btn'>
-					<p class='btn-p'><i class="fa fa-question-circle-o icon-plus"></i>About</p>
+				<!-- 正在进行中 -->
+				<div id='header-operation-inprogress' class='btn'>
+					<p class='btn-p'><i class="fa fa-question-circle-o icon-plus"></i>Inprogress</p>
 				</div>
+				<!-- 回收站 -->
+				<div id='header-operation-abandon' class='btn'>
+					<p class='btn-p'><i class="fa fa-question-circle-o icon-plus"></i>Abandon</p>
+				</div>
+				<!-- 已完成 -->
+				<div id='header-operation-completed' class='btn'>
+					<p class='btn-p'><i class="fa fa-question-circle-o icon-plus"></i>completed</p>
+				</div>
+				<!-- 清空 -->
 				<div id='header-operation-delAll' class='btn'>
 					<p class='btn-p'><i class="fa fa-trash-o icon-plus"></i>Del-all</p>
 				</div>
@@ -50,7 +63,9 @@
 			<!-- HEADER-ABOUT -->
 			<div id='header-about' class='header-box flex-box'>
 				<div id='header-about-left' style="width: 85%;">
-					<p class='headline-font' style="color: #1e1e1e"><strong>ToDo</strong> list</p>
+					<p class='headline-font' style="color: #1e1e1e">
+						<strong>ToDo</strong> list <i id='todoListStatus'>{{ status }}</i>
+					</p>
 				</div>
 				<div id='header-about-right' class='header-about-right flex-box' style="width: 15%;">
 					<p style="font-size:1.2em;"><strong>{{ inTotals }}</strong></p>
@@ -65,21 +80,24 @@
 			<!-- TODO LIST CONTNT —— INPROGRESS -->
 			<div id='todoList-container' class='todoList-container flex-box'>
 				<!-- Tabs <completed / inprogress / abandon> -->
-				<div class='todoList-container-tabs flex-box'>
+				<!-- <div class='todoList-container-tabs flex-box'>
 					<button
 						v-for="tab in tabs"
 						v-bind:key="tab"
 						v-bind:class="['tab-button', { active: currentTab === tab }]"
 						v-on:click="currentTab = tab"
 					>{{ tab }}</button>
-				</div>
+				</div> -->
 				<!-- Vue 实例 -->
-				<todoli
+				<!-- 使用 keep-alive 来保持元素活性，避免失活 -->
+				<keep-alive>
+					<todoli
 					v-for="(index,todoli) in todoList"
 					:dbId=todoli.id
 					:key=index
 					:todoli="todoli"
 				></todoli>
+				</keep-alive>
 			</div>
 		</div>
 
