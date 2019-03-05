@@ -96,7 +96,57 @@ var todoListContainer = new Vue({
     components: {
         'todoli':todoItem,
     },
+    // 尝试定义一个计算属性，这个属性用于返回过滤结果
+    // 还需要定义一个取消搜索的方法
+    // 点击完搜索后，搜索变成取消按钮，似乎把搜索做成 VUE 实例更简单。
 });
+
+
+// SEARCH CONTENT
+var searchContainer = new Vue({
+    el:"#search-container",
+    // 这块做一个双向绑定，以获取搜索输入内容
+    data: {
+        searchIcon: 'fa-search',
+        cacheData:'',
+        cacheStatus:'',
+    },
+    methods: {
+        search: function(){
+            if(this.searchIcon == 'fa-search'){
+                let _searchContent = this.searchContent;
+                if(typeof _searchContent == 'undefined' || $.trim(_searchContent) == false ){
+                    // 为空或为null
+                    msg('No search content entered.');
+                    return false
+                }else{
+                    _searchContent.toString();
+                }
+                var searchResult = todoListContainer.todoList.filter(function(item){
+                    let text = item.Text.toLowerCase();
+                    console.log(text)
+                    if(text.indexOf(_searchContent.toLowerCase()) > -1){return true}
+                })
+                if(searchResult.length > 0){
+                    // 状态缓存
+                    this.cacheData = todoListContainer.todoList;
+                    this.cacheStatus = todoListStatus.status;
+                    // 数据更新
+                    todoListContainer.todoList = searchResult;
+                    todoListStatus.status = 'searchResult';
+                    this.searchIcon = 'fa-close'
+                }else{
+                    msg('No matching search terms.')
+                }
+            }else if(this.searchIcon == 'fa-close'){
+                todoListContainer.todoList = this.cacheData;
+                todoListStatus.status = this.cacheStatus;
+                this.searchIcon = 'fa-search'
+            }
+        },
+    },
+})
+
 
 // 这个文件是实例化的 Vue 对象
 // todoListInTotals

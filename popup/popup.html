@@ -74,8 +74,11 @@
 			</div>
 			<!-- SEARCH CONTENT -->
 			<div id='search-container' class='flex-box'>
-				<input class='search-input' placeholder='Input keywords for search...'>
-				<i class="fa fa-search icon-search"></i>
+				<input class='search-input' placeholder='Input keywords for search...' v-model.trim='searchContent'>
+				<i class="fa icon-search" 
+					v-on:click='search'
+					v-bind:class='searchIcon'
+				></i>
 			</div>
 			<!-- TODO LIST CONTNT —— INPROGRESS -->
 			<div id='todoList-container' class='todoList-container flex-box'>
