@@ -71,7 +71,7 @@ $(document).ready(function(){
 
     // 点击 header-operation-about 时
     $('#header-operation-about').on('click', function(){
-        msg('当前版本：beta v0.02')
+        msg('当前版本：V1.0')
     });
 
     // 点击 icon-operation 时展开 todo 属性
@@ -143,6 +143,8 @@ $(document).ready(function(){
         todoListContainer.todoList = storageData;
         todoListInTotals.inTotals = storageData.length;
         todoListStatus.status = 'Inprogress';
+        todoListContainer.status = 'Inprogress';
+        todoListStatus.backgroundColor = '#5499c7';
     });
     $('#header-operation-abandon').on('click', function(){
         if(typeof abandonStorage == 'undefined'){
@@ -154,6 +156,8 @@ $(document).ready(function(){
         todoListContainer.todoList = abandonStorage;
         todoListInTotals.inTotals = abandonStorage.length;
         todoListStatus.status = 'Abandon';
+        todoListContainer.status = 'Abandon';
+        todoListStatus.backgroundColor = '#c0392b';
     });
     $('#header-operation-completed').on('click', function(){
         if(typeof completedStorage == 'undefined'){
@@ -165,6 +169,8 @@ $(document).ready(function(){
         todoListContainer.todoList = completedStorage;
         todoListInTotals.inTotals = completedStorage.length;
         todoListStatus.status = 'Completed';
+        todoListContainer.status = 'Completed';
+        todoListStatus.backgroundColor = '#58d68d';
     });
 
 

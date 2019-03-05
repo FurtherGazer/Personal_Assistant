@@ -55,7 +55,17 @@ var todoItem = {
                 }else if(_countDown < 0){
                     return '#ff0000'
                 }
-
+            },
+            // 计算属性给予它们的依赖进行缓存，这意味着如果 this.$options.parent; 
+            // 则 displayStatus 缓存保持不变；
+            displayStatus: function(){
+                let _parent = this.$options.parent; 
+                let status = _parent.status;
+                if(status != 'Inprogress'){
+                    return false;
+                }else{
+                    return true;
+                }
             },
         },
         methods: {
@@ -95,7 +105,7 @@ var todoItem = {
                     content:text,
                     style: `background-color:${this.labelColor}`,
                 })
-            }
+            },
         },
         template:  `<div class='todoList-li flex-box'>
                         <div class='todoList-li-label' v-bind:style="{backgroundColor: labelColor}"></div>
@@ -108,7 +118,9 @@ var todoItem = {
                                 <p class='todoList-li-content-p'>{{ abstract }}</p>
                             </div>
                         </div>
-                        <div class='todoList-li-operation flex-box'>
+                        <div class='todoList-li-operation flex-box'
+                            v-if='displayStatus'
+                        >
                             <i class="fa fa-check-square-o icon-operation" v-on:click='completeThisItem'></i>
                             <i class="fa fa-trash-o icon-operation" style='padding-left:10px;' v-on:click='delThisItem'></i>
                         </div>

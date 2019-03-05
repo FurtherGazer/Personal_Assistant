@@ -91,14 +91,19 @@ _objectDB.openDB(undefined, function(){
 var todoListContainer = new Vue({
     el:'#todoList-container',
     data: {
+        status: 'Inprogress',
         todoList: storageData,
     },
     components: {
         'todoli':todoItem,
     },
-    // 尝试定义一个计算属性，这个属性用于返回过滤结果
-    // 还需要定义一个取消搜索的方法
-    // 点击完搜索后，搜索变成取消按钮，似乎把搜索做成 VUE 实例更简单。
+    // computed: {
+    //     displayStatus: function(){
+    //         if(this.status != 'Inprogress'){
+    //             return false
+    //         }
+    //     },
+    // },
 });
 
 
@@ -110,6 +115,7 @@ var searchContainer = new Vue({
         searchIcon: 'fa-search',
         cacheData:'',
         cacheStatus:'',
+        cacheColor:'',
     },
     methods: {
         search: function(){
@@ -131,17 +137,22 @@ var searchContainer = new Vue({
                     // 状态缓存
                     this.cacheData = todoListContainer.todoList;
                     this.cacheStatus = todoListStatus.status;
+                    this.cacheStatus = todoListStatus.backgroundColor;
                     // 数据更新
                     todoListContainer.todoList = searchResult;
                     todoListStatus.status = 'searchResult';
-                    this.searchIcon = 'fa-close'
+                    todoListContainer.status = 'searchResult';
+                    this.searchIcon = 'fa-close';
+                    todoListStatus.backgroundColor = '#1e1e1e';
                 }else{
                     msg('No matching search terms.')
                 }
             }else if(this.searchIcon == 'fa-close'){
                 todoListContainer.todoList = this.cacheData;
                 todoListStatus.status = this.cacheStatus;
-                this.searchIcon = 'fa-search'
+                todoListContainer.status = this.cacheStatus;
+                this.searchIcon = 'fa-search';
+                todoListStatus.backgroundColor = this.cacheStatus;
             }
         },
     },
@@ -164,5 +175,6 @@ var todoListStatus = new Vue({
     el:'#header-about-left',
     data: {
         status: 'Inprogress',
+        backgroundColor: '#5499c7',
     }
 });
