@@ -23,6 +23,7 @@ _objectDB.openDB(undefined, function(){
     _objectDB.readAllData('inprogress',storageData, function(){
         console.log(storageData);
         todoListInTotals.inTotals = storageData.length;
+        updateBrowserAction(storageData.length);
     })
 });
 
@@ -106,7 +107,6 @@ var todoListContainer = new Vue({
     // },
 });
 
-
 // SEARCH CONTENT
 var searchContainer = new Vue({
     el:"#search-container",
@@ -155,6 +155,60 @@ var searchContainer = new Vue({
                 todoListStatus.backgroundColor = this.cacheStatus;
             }
         },
+    },
+})
+
+// SORT CONTENT
+var sortContainer = new Vue({
+    el:"#sort-container",
+    data: {
+        sortPriorityIcon: ['fa-angle-down','fa-angle-up'],
+        sortDeadlineIcon: ['fa-angle-down','fa-angle-up'],
+        sortByPriorityColor: ['black','red'],
+        sortByDeadlineColor: ['black','red'],
+    },
+    methods: {
+        refresh: function(){
+            location.reload();
+        },
+        sortByPriority: function(){
+            this.colorChange(this.sortByPriorityColor);
+            this.iconChange(this.sortPriorityIcon);
+            todoListContainer.todoList.sort(this.priorityCompare);
+        },
+        sortByDeadline: function(){
+            this.colorChange(this.sortByDeadlineColor);
+            this.iconChange(this.sortDeadlineIcon);
+            todoListContainer.todoList.sort(this.deadlineCompare);
+        },
+        priorityCompare: function(a,b){
+            let priorityScore = {
+                'low' : 1,
+                'medium': 0,
+                'high': -1,
+            }
+            if(this.sortPriorityIcon[0] == 'fa-angle-down'){
+                return priorityScore[a.Priority] - priorityScore[b.Priority]
+            }else{
+                return (priorityScore[a.Priority] - priorityScore[b.Priority])*-1
+            }
+
+        },
+        deadlineCompare: function(a,b){
+            let _a = new Date(a.Deadline);
+            let _b = new Date(b.Deadline);
+            if(this.sortDeadlineIcon[0] == 'fa-angle-down'){
+                return _a - _b;
+            }else{
+                return (_a - _b)*-1;
+            }
+        },
+        colorChange: function(_who){
+            _who.reverse();
+        },
+        iconChange: function(_who){
+            _who.reverse();
+        }
     },
 })
 

@@ -104,7 +104,7 @@ p {
     color: #1e1e1e;
 }
 .todoList-container {
-    height: 425px;
+    height: 400px;
     /* background-color: #1e1e1e; */
     /* border-bottom: 1px solid #f1f1f1; */
     overflow-y:auto; overflow-x:auto;
@@ -187,6 +187,9 @@ p {
 .icon-plus {
     padding: 10px;
 }
+.icon-small {
+    padding: 5px;
+}
 .icon-operation {
     /* text-align: left; */
     line-height: 100%;
@@ -261,3 +264,16 @@ p {
     color: #fff;
     font-size: 80%;
 }
+#sort-container {
+    border-bottom: 1px solid #f1f1f1;
+    /* margin: 2px 0px; */
+    flex-direction: row;
+}
+.sort-p {
+    margin: 5px 0px;
+    padding: 0px 15px;
+    font-size: 80%;
+    border-left: 1px solid #f1f1f1;
+    color:#5499C7
+}
+

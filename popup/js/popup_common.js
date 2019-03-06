@@ -14,18 +14,12 @@ function sendMessageToContentScript(message, callback)
 	});
 };
 
-// function updateBrowserAction(ifStart) {
-//     chrome.browserAction.setTitle({
-//         title: ifStart ? '测试用纯净谷歌拓展: ON' : '测试用纯净谷歌拓展: OFF'
-//     });
-//     chrome.browserAction.setIcon({
-//         path: ifStart ? {'16': 'img/icon-on-16.png', '32': 'img/icon-on-32.png'} :
-//                     {'16': 'img/icon-off-16.png', '32': 'img/icon-off-32.png'}
-//     });
-//     chrome.browserAction.setBadgeText({
-//         text: ifStart ? 'ON' : ''
-//     });
-// };
+function updateBrowserAction(len){
+    var len = len.toString() || '0';
+    chrome.browserAction.setBadgeText({
+        text: len
+    });
+};
 
 // 初始化状态
 // 初始化状态会导致每次点击的时候都默认为 false，这是不合理的
@@ -273,6 +267,8 @@ function saveData(rtimepickerStarted,rtimepickerDeadline,rselectPriority,todoTex
         storageData.Deadline = rtimepickerDeadline;
         storageData.Priority = rselectPriority;
         _objectDB.addData('inprogress',storageData);
+        // 因为 storageData 对应的是 inprogress，所以此处无问题
+        updateBrowserAction(storageData.length);
     }catch(err){console.log('func saveData Error!')}
 }
 

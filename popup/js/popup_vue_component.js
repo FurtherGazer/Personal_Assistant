@@ -9,12 +9,17 @@ var todoItem = {
                 let now = new Date();
                 let Deadline = new Date(this.todoli.Deadline);
                 let _countDown = (Deadline - now)/1000/60/60;
-                if(_countDown > 1000){
-                    return '>1k';
+                if(_countDown > 2160){
+                    return {day:'>3M',hours:''};
                 }else if(_countDown < 0){
-                    return '超时';
+                    return {day:'超时',hours:''};
                 }else{
-                    return _countDown.toFixed(1) * -1;
+                    let _countDownDay = _countDown / 24;
+                     _countDownDay = _countDownDay.toFixed(0) + ' D';
+                    let _countDownHour = _countDown % 24;
+                    _countDownHour > 9 ? _countDownHour = 9 : _countDownHour;
+                    _countDownHour = _countDownHour.toFixed(0) + ' H';
+                    return {day:_countDownDay, hours:_countDownHour};
                 }
             },
             abstract: function(){
@@ -47,11 +52,11 @@ var todoItem = {
                 let Deadline = new Date(this.todoli.Deadline);
                 let _countDown = (Deadline - now)/1000/60/60;
                 if(_countDown > 168){
-                    return '#C0392B'
+                    return '#58D68D'
                 }else if(_countDown > 24){
                     return '#5499C7'
                 }else if(_countDown < 24){
-                    return '#58D68D'
+                    return '#C0392B'
                 }else if(_countDown < 0){
                     return '#ff0000'
                 }
@@ -86,6 +91,7 @@ var todoItem = {
                 // 这块因为 _dbId: stirng 的原因，卡了很久，因为这块必须要用 number
                 _objectDB.deleteData('inprogress', _dbId*1);
                 todoListInTotals.inTotals--;
+                updateBrowserAction(storageData.length);
             },
             // 完成
             completeThisItem: function(){
@@ -97,6 +103,7 @@ var todoItem = {
                 _parent.todoList.splice(_key,1);
                 _objectDB.deleteData('inprogress', _dbId*1);
                 todoListInTotals.inTotals--;
+                updateBrowserAction(storageData.length);
             },
             showDetail: function(){
                 // 希望达到的效果：点击后弹出底部弹窗包含详细文本信息。以便于查看，而且文本背景色和优先级有关
@@ -110,8 +117,8 @@ var todoItem = {
         template:  `<div class='todoList-li flex-box'>
                         <div class='todoList-li-label' v-bind:style="{backgroundColor: labelColor}"></div>
                         <div class='todoList-li-Left flex-box' v-bind:style="{color: countDownColor}">
-                            <p class='todoList-CountDown'><b>{{ countDown }}</b></p>
-                            <i class='todoList-CountDown'>hours</i>
+                            <p class='todoList-CountDown'><b>{{ countDown.day }}</b></p>
+                            <i class='todoList-CountDown'>{{ countDown.hours }}</i>
                         </div>
                         <div class='todoList-li-content flex-box' v-on:click='showDetail'>
                             <div class='todoList-li-content-text'>

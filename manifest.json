@@ -8,8 +8,8 @@
     },
     "browser_action": {
       "default_icon": {
-        "16": "img/icon-off-16.png",
-        "32": "img/icon-off-32.png"
+        "16": "img/icon-on-16.png",
+        "32": "img/icon-on-32.png"
      },
       "default_title": "个人助理插件",
       "default_popup": "popup/popup.html"

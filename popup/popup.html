@@ -81,6 +81,31 @@
 					v-bind:class='searchIcon'
 				></i>
 			</div>
+			<!-- SORT CONTENT -->
+			<div id='sort-container' class='flex-box'>
+				<!-- <p>Sort by:</p> -->
+				<!-- 优先级排序 -->
+				<div id='sort-container-priority' class='btn' v-on:click='sortByPriority'>
+					<p class='sort-p'
+						v-bind:style="{color: sortByPriorityColor[0]}"
+					>Priority <i class="fa icon-small"
+						v-bind:class='sortPriorityIcon[0]'						
+					></i></p>
+				</div>
+				<!-- 倒计时排序 -->
+				<div id='sort-container-deadline' class='btn' v-on:click='sortByDeadline'>
+					<p class='sort-p'
+						v-bind:style="{color: sortByDeadlineColor[0]}"
+					>Deadline <i class="fa icon-small"
+						v-bind:class='sortDeadlineIcon[0]'		
+					></i></p>
+				</div>
+				<!-- 刷新 -->
+				<div id='sort-container-deadline' class='btn'
+					v-on:click='refresh'
+				><p class='sort-p'><i class="fa fa-refresh icon-small"></i></p>
+				</div>
+			</div>
 			<!-- TODO LIST CONTNT —— INPROGRESS -->
 			<div id='todoList-container' class='todoList-container flex-box'>
 				<!-- Vue 实例 -->
