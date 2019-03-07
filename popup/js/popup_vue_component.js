@@ -15,7 +15,8 @@ var todoItem = {
                     return {day:'超时',hours:''};
                 }else{
                     let _countDownDay = _countDown / 24;
-                     _countDownDay = _countDownDay.toFixed(0) + ' D';
+                    _countDownDay = _countDownDay.toFixed(0) + ' D';
+                    _countDown = _countDown.toFixed(0);
                     let _countDownHour = _countDown % 24;
                     _countDownHour > 9 ? _countDownHour = 9 : _countDownHour;
                     _countDownHour = _countDownHour.toFixed(0) + ' H';
@@ -105,6 +106,54 @@ var todoItem = {
                 todoListInTotals.inTotals--;
                 updateBrowserAction(storageData.length);
             },
+            // 编辑
+            editThisItem: function(){
+                var _thisElement = this.$el;
+                let _dbId = _thisElement.getAttribute('dbid');
+                layer.open({
+                    type:1,
+                    content: `		
+                    <!-- EDIT -->
+                    <div id='popup-editToDoItem' class='flex-box' >
+                        <div class='popup-center-content' key='${_dbId}'>
+                            <div>
+                                <input type='text' id='popup-timepicker-started' style='display:none'
+                                    value='${this.todoli.Deadline}'
+                                />
+                                <p>Started: ${this.todoli.Deadline}</p>
+                            </div>
+
+                            <div>
+                                <p>Deadline:</p>
+                                <input type='text' id='popup-timepicker-Deadline' 
+                                    value='${this.todoli.Deadline}'
+                                />
+                            </div>
+                            <div>
+                                <p>ToDo:</p>
+                                <textarea id='popup-todoTextarea'
+                                    value="${this.todoli.Text}"
+                                >${this.todoli.Text}</textarea>
+                            </div>
+                            <div>
+                                <p>Priority:</p>
+                                <select id="popup-selectPriority" value='${this.todoli.Priority}'>
+                                    <option>low</option><option>medium</option><option>high</option>
+                                </select>
+                            </div>
+                            <div id='popup-save-bt-container'>
+                                <button id='popup-save-bt'><i class="fa fa-check icon-plus"></i>save</button>
+                            </div>
+                        </div>
+                    </div>`,
+                    success: function(){
+                        $('#popup-save-bt').on('click',function(){
+                            editSave();
+                        })
+                    },
+                });
+            },
+            // 展示详情
             showDetail: function(){
                 // 希望达到的效果：点击后弹出底部弹窗包含详细文本信息。以便于查看，而且文本背景色和优先级有关
                 let text = this.todoli.Text;
@@ -129,6 +178,7 @@ var todoItem = {
                             v-if='displayStatus'
                         >
                             <i class="fa fa-check-square-o icon-operation" v-on:click='completeThisItem'></i>
+                            <i class="fa fa-edit icon-operation" style='padding-left:10px;' v-on:click='editThisItem'></i>
                             <i class="fa fa-trash-o icon-operation" style='padding-left:10px;' v-on:click='delThisItem'></i>
                         </div>
                     </div>`,

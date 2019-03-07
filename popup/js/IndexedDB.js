@@ -195,7 +195,8 @@ var ClassIndexedDB = /** @class */ (function () {
         return outDataArray;
     };
     // 更新数据 - updateDate 几乎可以拿来当 add 用
-    ClassIndexedDB.prototype.updateData = function (storeName, key, value) {
+    ClassIndexedDB.prototype.updateData = function (storeName, key, value, funcSucc) {
+        if (funcSucc === void 0) { funcSucc = function () { }; }
         if (typeof storeName == 'undefined' || typeof value == 'undefined' || typeof key == 'undefined') {
             console.error('readData Error! storeName&value&key is necessary!');
             return false;
@@ -208,6 +209,7 @@ var ClassIndexedDB = /** @class */ (function () {
             .put(value, key);
         request.onsuccess = function (event) {
             console.log('updateData Success!');
+            funcSucc();
         };
         request.onerror = function (event) {
             console.log('updateData Error!');

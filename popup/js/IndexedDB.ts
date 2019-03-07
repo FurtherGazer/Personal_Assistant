@@ -197,7 +197,7 @@ class ClassIndexedDB {
         return outDataArray;
     }
     // 更新数据 - updateDate 几乎可以拿来当 add 用
-    updateData(storeName: string, key:number, value:any){
+    updateData(storeName: string, key:number, value:any, funcSucc=function(){}){
         if(typeof storeName == 'undefined' || typeof value == 'undefined' || typeof key == 'undefined'){
             console.error('readData Error! storeName&value&key is necessary!');
             return false;
@@ -209,7 +209,8 @@ class ClassIndexedDB {
             .objectStore(storeName)
             .put(value,key);
         request.onsuccess = function(event){
-            console.log('updateData Success!')
+            console.log('updateData Success!');
+            funcSucc();
         }
         request.onerror = function(event){
             console.log('updateData Error!');

@@ -321,3 +321,49 @@ function msg(text, t=2){
 //         }
 //     }
 // }
+
+// 保存修改
+function editSave(){
+    let key = $('.popup-center-content').attr('key') * 1;
+    let rtimepickerStarted = $('#popup-timepicker-started').val();
+    let timepickerStarted = new Date(rtimepickerStarted);
+    let timepickerDeadline = $('#popup-timepicker-Deadline').val();
+    let selectPriority = $('#popup-selectPriority').val();
+    let todoTextarea = $('#popup-todoTextarea').val();
+    let timeCheck = /(\d{2}\/\d{2}\/\d{4}\s{1}\d{2}\:\d{2}\s{1}(am|pm))/i;
+    let selectPriorityCheck = /(low|medium|high)/i;
+    if(timeCheck.test(timepickerDeadline)){
+        var rtimepickerDeadline = RegExp.$1;
+        var _rtimepickerDeadline = new Date(rtimepickerDeadline);
+        // 这块检测的就是实际时间，但是保存的是天
+        if(timepickerStarted.getTime() > _rtimepickerDeadline.getTime()){
+            msg('结束时间不得小于开始时间');
+            return false
+        };
+        if(todoTextarea.length > 0){
+            if(selectPriorityCheck.test(selectPriority)){
+                var rselectPriority = RegExp.$1;
+                let storageData = new Array();
+                storageData.Text = todoTextarea;
+                storageData.Started = rtimepickerStarted;
+                storageData.Deadline = rtimepickerDeadline;
+                storageData.Priority = rselectPriority;
+                _objectDB.updateData('inprogress', key, storageData, function(){
+                    msg('数据更新完毕');
+                    layer.closeAll();
+                    setTimeout(function(){location.reload(); },2000);
+                });
+                return true;
+            }else{
+                msg('请勿直接输入或修改内容');
+                return false;
+            }
+        }else{
+            msg('输入内容不可为空');
+            return false;
+        }
+    }else{
+        msg('请点击选择有效日期');
+        return false;
+    }
+};
