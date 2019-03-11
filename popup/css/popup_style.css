@@ -4,6 +4,7 @@
 }
 body {
     font-family: 'Microsoft Yahei';
+    overflow: hidden;
 }
 p {
     margin: 0px;
@@ -18,6 +19,7 @@ p {
     width: 450px;
     min-height: 600px;
     background-color: white;
+    overflow: hidden;
 }
 .header-box {
     width: 100%;
@@ -104,7 +106,7 @@ p {
     color: #1e1e1e;
 }
 .todoList-container {
-    height: 400px;
+    height: 390px;
     /* background-color: #1e1e1e; */
     /* border-bottom: 1px solid #f1f1f1; */
     overflow-y:auto; overflow-x:auto;
@@ -164,9 +166,11 @@ p {
     justify-content: center;
     align-items: center;
     position: absolute;
-    top:565px;
+    top:564px;
     width: 100%;
     border-top: 1px solid #f1f1f1;
+    z-index: 999;
+    background-color: white;
 }
 #addMore {
     width: 100%;
