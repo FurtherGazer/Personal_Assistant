@@ -84,15 +84,22 @@ var todoItem = {
                 let _dbId = _thisElement.getAttribute('dbid');
                 // 这块应该直接对其父实例的元素进行修改，不绑定外面定义的变量。
                 let _parent = this.$options.parent; // 此处的引用指向同一个作用域
-                // console.log(_parent.todoList);
-                // 加入回收站
-                _objectDB.addData('abandon', _parent.todoList[_key]);
-                // 实例中数据删除
-                _parent.todoList.splice(_key,1);
-                // 这块因为 _dbId: stirng 的原因，卡了很久，因为这块必须要用 number
-                _objectDB.deleteData('inprogress', _dbId*1);
-                todoListInTotals.inTotals--;
-                updateBrowserAction(storageData.length);
+                layer.open({
+                    content: 'Are you sure you want to delete it?',
+                    btn: ['yes', 'no'],
+                    yes: function(index){
+                        // console.log(_parent.todoList);
+                        // 加入回收站
+                        _objectDB.addData('abandon', _parent.todoList[_key]);
+                        // 实例中数据删除
+                        _parent.todoList.splice(_key,1);
+                        // 这块因为 _dbId: stirng 的原因，卡了很久，因为这块必须要用 number
+                        _objectDB.deleteData('inprogress', _dbId*1);
+                        todoListInTotals.inTotals--;
+                        updateBrowserAction(storageData.length);
+                        layer.close(index);
+                    }
+                })
             },
             // 完成
             completeThisItem: function(){
@@ -100,11 +107,18 @@ var todoItem = {
                 let _key = _thisElement.getAttribute('key');
                 let _dbId = _thisElement.getAttribute('dbid');
                 let _parent = this.$options.parent; 
-                _objectDB.addData('completed', _parent.todoList[_key]);
-                _parent.todoList.splice(_key,1);
-                _objectDB.deleteData('inprogress', _dbId*1);
-                todoListInTotals.inTotals--;
-                updateBrowserAction(storageData.length);
+                layer.open({
+                    content: 'Are you sure you have finished this todoItem?',
+                    btn: ['yes', 'no'],
+                    yes: function(index){
+                        _objectDB.addData('completed', _parent.todoList[_key]);
+                        _parent.todoList.splice(_key,1);
+                        _objectDB.deleteData('inprogress', _dbId*1);
+                        todoListInTotals.inTotals--;
+                        updateBrowserAction(storageData.length);
+                        layer.close(index);
+                    }
+                })
             },
             // 编辑
             editThisItem: function(){
